@@ -1,0 +1,4 @@
+#!/ust/bin/env bash
+
+xrdb ${HOME}/.Xresources
+
