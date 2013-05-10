@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 
 	// Printing the prompt
 	std::cout << "[" << setfill('0') << setw(3) << return_code << "]";
-	std::cout << "(" << setfill('/') << setw(dir_list_max_size) << dir_rep << ")";
+	std::cout << "(" << setfill('.') << setw(dir_list_max_size) << dir_rep << ")";
 	
 	std::cout << std::endl;
   return 0;	
