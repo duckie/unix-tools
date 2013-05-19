@@ -15,13 +15,13 @@ using std::setw;
 int main(int argc, char* argv[]) {
 	// Check command line arguments
 	if (argc != 4) {
-		std::cerr << "Usage: " << argv[0] << " $(pwd) $? max_size" << std::endl;
+		std::cerr << "Usage: " << argv[0] << " $? $(pwd) max_size" << std::endl;
 		return 2;
 	}
 
 	// Converting command line arguments
-	string current_dir(argv[1]);
-	int return_code = std::atoi(argv[2]);
+	int return_code = std::atoi(argv[1]);
+	string current_dir(argv[2]);
 	int max_size = std::atoi(argv[3]);
 	if (max_size < 9) {
 		std::cerr << "Max size must be at least 9 (" << max_size << " given)." << std::endl;
