@@ -21,4 +21,10 @@
 
 XTerm*faceName: Inconsolata Sans Mono
 ! XTerm*faceName: xft:Inconsolata-dz for Powerline
+! XTerm*faceName: DejaVu Sans:size=10
 XTerm*faceSize: 10
+! XTerm*font: -misc-dejavu sans-medium-r-normal--0-0-0-0-p-0-iso10646-1
+XTerm*utf8: 1
+XTerm*locale: true
+! XTerm*faceName: -misc-inconsolata-medium-r-normal--0-0-0-0-p-0-iso10646-1
+
