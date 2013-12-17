@@ -1,4 +1,5 @@
-unix-tools
+My personal config files
 ==========
 
-Personal configuration files for Unix workstations
+Feel free to pick anything you want in there
+
