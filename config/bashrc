@@ -9,8 +9,8 @@ fi
 alias ls='ls --color=auto'
 
 # Custom prompt, need to have cppprompt compiled
-pchar_blank=$(echo -e "\033[m")
-pchar_folder_sep=$(echo -e "\033[31m")
+pchar_blank=$(echo -e "\001\033[0m\002")
+pchar_folder_sep=$(echo -e "\001\033[0;31m\002")
 PS1='`${HOME}/.tools/bin/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}"`\[\033[01;31m\]\$\[\033[00m\] '
 
 # Completion
