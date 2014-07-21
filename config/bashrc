@@ -23,3 +23,28 @@ if [ ${TERM} = "xterm" ]; then
 	export TERM="xterm-256color"
 fi
 
+# Molokai theme
+#declare map0
+#map0=(  [foreground     ]='#F8F8F2'     [background     ]='#272822'
+#        [cursor         ]='#F8F8F0'     [selection      ]='#49483E'
+#        [pink           ]='#F92672'     [green          ]='#A6E22E'
+#        [yellow         ]='#E6DB74'     [blue           ]='#66D9EF'
+#        [purple         ]='#AE81FF'     [orange         ]='#FD971F'
+#        [gray           ]='#75715E'                                     )
+#map1=(  # Foreground    # Background    # Cursor
+#        foreground      background      cursor                          )
+#map2=(  # Black         # Red           # Green         # Yellow
+#        background      pink            green           yellow
+#        # Blue          # Magenta       # Cyan          # White
+#        blue            purple          orange          foreground
+#        # Bold black    # Bold red      # Bold green    # Bold yellow
+#        selection       pink            green           yellow
+#        # Bold blue     # Bold magenta  # Bold cyan     # Bold white
+#        blue            purple          orange          foreground      )
+##map3=(  M o n o k a i                                                   )
+##map4=(  1 6 3 2 4 5 7                                                   )
+#for i in "${!map1[@]}"; do echo -en "\e]1$i;${map0[${map1[$i]}]}\a"; done
+#for i in "${!map2[@]}"; do echo -en "\e]4;$i;${map0[${map2[$i]}]}\a"; done
+##for i in "${!map3[@]}"; do echo -en "\e[1;3${map4[$i]}m${map3[$i]}"; done
+##echo -e "\e[0m color scheme applied"
+
