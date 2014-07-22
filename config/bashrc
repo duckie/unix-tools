@@ -9,8 +9,8 @@ fi
 alias ls='ls --color=auto'
 
 # Custom prompt, need to have cppprompt compiled
-pchar_blank=$(echo -e "\033[m")
-pchar_folder_sep=$(echo -e "\033[31m")
+pchar_blank=$(echo -e "\001\033[0m\002")
+pchar_folder_sep=$(echo -e "\001\033[0;31m\002")
 PS1='`${HOME}/.tools/bin/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}"`\[\033[01;31m\]\$\[\033[00m\] '
 
 # Completion
@@ -22,4 +22,52 @@ fi
 if [ ${TERM} = "xterm" ]; then
 	export TERM="xterm-256color"
 fi
+
+# SSH with tmux
+ssh() {
+  # Do nothing if we are not inside tmux or ssh is called without arguments
+  if [[ $# == 0 || -z $TMUX ]]; then
+    command ssh $@
+    return
+  fi
+  # The hostname is the last parameter (i.e. ${(P)#})
+  #local remote=${${(P)#}%.*} # ZSH version
+  local remote="${@: -1}"
+  local old_name="$(tmux display-message -p '#W')"
+  local renamed=0
+  # Save the current name
+  if [[ $remote != -* ]]; then
+    renamed=1
+    tmux rename-window $remote
+  fi
+  command ssh $@
+  if [[ $renamed == 1 ]]; then
+    tmux rename-window "$old_name"
+  fi
+}
+
+# Molokai theme
+#declare map0
+#map0=(  [foreground     ]='#F8F8F2'     [background     ]='#272822'
+#        [cursor         ]='#F8F8F0'     [selection      ]='#49483E'
+#        [pink           ]='#F92672'     [green          ]='#A6E22E'
+#        [yellow         ]='#E6DB74'     [blue           ]='#66D9EF'
+#        [purple         ]='#AE81FF'     [orange         ]='#FD971F'
+#        [gray           ]='#75715E'                                     )
+#map1=(  # Foreground    # Background    # Cursor
+#        foreground      background      cursor                          )
+#map2=(  # Black         # Red           # Green         # Yellow
+#        background      pink            green           yellow
+#        # Blue          # Magenta       # Cyan          # White
+#        blue            purple          orange          foreground
+#        # Bold black    # Bold red      # Bold green    # Bold yellow
+#        selection       pink            green           yellow
+#        # Bold blue     # Bold magenta  # Bold cyan     # Bold white
+#        blue            purple          orange          foreground      )
+##map3=(  M o n o k a i                                                   )
+##map4=(  1 6 3 2 4 5 7                                                   )
+#for i in "${!map1[@]}"; do echo -en "\e]1$i;${map0[${map1[$i]}]}\a"; done
+#for i in "${!map2[@]}"; do echo -en "\e]4;$i;${map0[${map2[$i]}]}\a"; done
+##for i in "${!map3[@]}"; do echo -en "\e[1;3${map4[$i]}m${map3[$i]}"; done
+##echo -e "\e[0m color scheme applied"
 

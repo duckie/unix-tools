@@ -105,7 +105,12 @@ set showtabline=2
 function MyTabLabel(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
-  return ' {'.a:n.'} '. split(bufname(buflist[winnr - 1]),"/")[-1]
+  let name = bufname(buflist[winnr - 1])
+  if name == ""
+    return ' {'.a:n.'} '
+  else
+    return ' {'.a:n.'} '. split(bufname(buflist[winnr - 1]),"/")[-1]
+  endif
 endfunction
 
 function MyTabLine()
