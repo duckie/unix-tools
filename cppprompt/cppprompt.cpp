@@ -7,6 +7,7 @@
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <vector>
 
 using std::array;
 using std::deque;
@@ -16,6 +17,10 @@ using std::ostringstream;
 using std::setfill;
 using std::setw;
 using std::string;
+using std::size_t;
+using std::pair;
+using std::istringstream;
+using std::vector;
 
 struct ColorCodes {
   string blank;
@@ -25,20 +30,21 @@ struct ColorCodes {
 };
 
 int main(int argc, char* argv[]) {
-	// Check command line arguments
-	if (argc < 4) {
-		std::cerr << "Usage: " << argv[0] << " $? $(pwd) max_size" << std::endl;
-		return 2;
-	}
 
-	// Converting command line arguments
-	int return_code = std::atoi(argv[1]);
-	string current_dir(argv[2]);
-	int max_size = std::atoi(argv[3]);
-	if (max_size < 9) {
-		std::cerr << "Max size must be at least 9 (" << max_size << " given)." << std::endl;
-		return 2;
-	}
+  // Check command line arguments
+  if (argc < 4) {
+    std::cerr << "Usage: " << argv[0] << " $? $(pwd) max_size" << std::endl;
+    return 2;
+  }
+
+  // Converting command line arguments
+  int return_code = std::atoi(argv[1]);
+  string current_dir(argv[2]);
+  int max_size = std::atoi(argv[3]);
+  if (max_size < 9) {
+    std::cerr << "Max size must be at least 9 (" << max_size << " given)." << std::endl;
+    return 2;
+  }
 
   ColorCodes codes;
   if(5 < argc) {
@@ -54,71 +60,71 @@ int main(int argc, char* argv[]) {
     }
   }
 
-	// Tokenizing the path
-	deque<string> path;
-	for (char current_char : current_dir) {
-		if(current_char == '/') path.push_back("");
-		else path.back() += current_char; 
-	}
+  // Tokenizing the path
+  vector<pair<string, size_t>> tokens;
+  istringstream tokenizer_stream(current_dir);
+  string token;
+  while (std::getline(tokenizer_stream, token, '/')) {
+    if (token.size()) tokens.emplace_back(token, token.size());
+  }
 
-	deque<char> truncated_path;
-	for_each(path.begin(), path.end(), [&](string const& s){ truncated_path.push_back(s[0]); });
+  // Searching the optimized directory string
+  int dir_list_max_size = max_size - 7;
+  // Finding the best number of complete tokens
+  size_t nb_complete= 0 ;
+  size_t nb_tokens = tokens.size();
+  size_t size_rep = 2*tokens.size();
+  while (size_rep <= dir_list_max_size && nb_complete < nb_tokens) {
+    ++nb_complete;
+    size_rep += (tokens[nb_tokens-nb_complete].second-1);
+  }
+  if (0 < nb_complete && (nb_complete < tokens.size() || dir_list_max_size < size_rep)) {
+    size_rep -= (tokens[nb_tokens - nb_complete].second-1);
+    --nb_complete;
+  }
 
-	// Searching the optimized directory string
-	int dir_list_max_size = max_size - 7;
-	//string dir_rep;
+  // Fitting
+  if (nb_complete < nb_tokens) {
+    size_t index = 0;
+    for(auto& token : tokens) {
+      if (index < tokens.size() - nb_complete) 
+        token.second = 1;
+      else
+        break;
+      ++index;
+    }
+
+    size_t slots_remaining = dir_list_max_size - size_rep;
+    size_t nb_truncated = tokens.size() - nb_complete;
+    size_t nb_truncated_filled = 0;
+    index = nb_truncated-1;
+
+    while(slots_remaining) {
+      if (tokens[index].second < tokens[index].first.size()) {
+        ++tokens[index].second;
+        --slots_remaining;
+      }
+
+      --index;
+      if (nb_truncated -1 < index)
+        index = nb_truncated - 1;
+    }
+  }
+
+  // Rendering
+  size_rep = 0;
+  size_t not_printable_str_size = 0;
   ostringstream dir_rep;
-  string dir_str;
-  int invisible_str_size = 0;
-	bool leading_truncated = false;
-	assert(2 <= dir_list_max_size);
-	// Case of root directory
-	if (0 == path.size() || (1 == path.size() && 0 == path[0].size())) {
-		dir_rep << codes.folder_sep << "/" << codes.blank;
-    invisible_str_size += codes.folder_sep.size() + codes.blank.size();
-	}
-	else {
-		int nb_complete = 0;
-		int nb_truncated = truncated_path.size();
+  for(auto const& token : tokens) {
+    dir_rep << codes.folder_sep << "/" << codes.truncated_folder << token.first.substr(0,token.second);
+    size_rep += token.second;
+    not_printable_str_size += codes.folder_sep.size() + codes.truncated_folder.size();
+  }
 
-		int nb_complete_candidate = 1;
-		bool too_long_candidate_found = false;
-		while(!too_long_candidate_found && nb_complete_candidate <= path.size()) {
-			int size_rep = 0;
-			for_each(path.end() - nb_complete_candidate, path.end(), [&](string const& s) { size_rep += s.size()+1; });
-			size_rep += 2*(nb_truncated - nb_complete_candidate);
-			if(dir_list_max_size < size_rep) {
-				too_long_candidate_found = true;
-			}
-			if(!too_long_candidate_found) ++nb_complete_candidate;
-		}
-    int size_rep = 0;
-		nb_complete = nb_complete_candidate - 1;
-		nb_truncated -= nb_complete;
-	
-		for_each(truncated_path.begin(), truncated_path.begin()+nb_truncated, [&](char c){ 
-			dir_rep << codes.folder_sep << "/" << codes.truncated_folder << c; 
-      size_rep +=2;
-      invisible_str_size += codes.folder_sep.size() + codes.truncated_folder.size();
-		});
-		for_each(path.end() - nb_complete, path.end(), [&](string & s){ 
-			dir_rep << codes.folder_sep << "/" << codes.complete_folder << s; 
-      size_rep += (1+s.size());
-      invisible_str_size += codes.folder_sep.size() + codes.complete_folder.size();
-		});
-    dir_rep << codes.blank;
-    dir_str = dir_rep.str();
-    invisible_str_size += codes.blank.size();
-		if(dir_list_max_size < size_rep) {
-			dir_str = dir_str.substr(size_rep - dir_list_max_size);
-			dir_str[0] = '*'; 
-		}
-	}
+  // Printing the prompt
+  std::cout << "[" << setfill('0') << setw(3) << return_code << "]";
+  std::cout << "(" << setfill('.') << setw(dir_list_max_size + not_printable_str_size) << dir_rep.str() << ")";
+  std::cout << std::endl;
 
-	// Printing the prompt
-	std::cout << "[" << setfill('0') << setw(3) << return_code << "]";
-	std::cout << "(" << setfill('.') << setw(dir_list_max_size + invisible_str_size) << dir_str << ")";
-	
-	std::cout << std::endl;
-  return 0;	
+  return 0;
 }
