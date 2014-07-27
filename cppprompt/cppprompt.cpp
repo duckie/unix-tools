@@ -68,51 +68,57 @@ int main(int argc, char* argv[]) {
     if (token.size()) tokens.emplace_back(token, token.size());
   }
 
-  // Searching the optimized directory string
-  int dir_list_max_size = max_size - 7;
-  // Finding the best number of complete tokens
-  size_t nb_complete= 0 ;
   size_t nb_tokens = tokens.size();
-  size_t size_rep = 2*tokens.size();
-  while (size_rep <= dir_list_max_size && nb_complete < nb_tokens) {
-    ++nb_complete;
-    size_rep += (tokens[nb_tokens-nb_complete].second-1);
-  }
-  if (0 < nb_complete && (nb_complete < tokens.size() || dir_list_max_size < size_rep)) {
-    size_rep -= (tokens[nb_tokens - nb_complete].second-1);
-    --nb_complete;
-  }
+  int dir_list_max_size = max_size - 7;
 
-  // Fitting
-  if (nb_complete < nb_tokens) {
-    size_t index = 0;
-    for(auto& token : tokens) {
-      if (index < tokens.size() - nb_complete) 
-        token.second = 1;
-      else
-        break;
-      ++index;
+  if (nb_tokens) {
+    // Searching the optimized directory string
+    // Finding the best number of complete tokens
+    size_t nb_complete= 0 ;
+    size_t size_rep = 2*tokens.size();
+    while (size_rep <= dir_list_max_size && nb_complete < nb_tokens) {
+      ++nb_complete;
+      size_rep += (tokens[nb_tokens-nb_complete].second-1);
+    }
+    if (0 < nb_complete && (nb_complete < tokens.size() || dir_list_max_size < size_rep)) {
+      size_rep -= (tokens[nb_tokens - nb_complete].second-1);
+      --nb_complete;
     }
 
-    size_t slots_remaining = dir_list_max_size - size_rep;
-    size_t nb_truncated = tokens.size() - nb_complete;
-    size_t nb_truncated_filled = 0;
-    index = nb_truncated-1;
-
-    while(slots_remaining) {
-      if (tokens[index].second < tokens[index].first.size()) {
-        ++tokens[index].second;
-        --slots_remaining;
+    // Fitting
+    if (nb_complete < nb_tokens) {
+      size_t index = 0;
+      for(auto& token : tokens) {
+        if (index < tokens.size() - nb_complete) 
+          token.second = 1;
+        else
+          break;
+        ++index;
       }
 
-      --index;
-      if (nb_truncated -1 < index)
-        index = nb_truncated - 1;
+      size_t slots_remaining = dir_list_max_size - size_rep;
+      size_t nb_truncated = tokens.size() - nb_complete;
+      size_t nb_truncated_filled = 0;
+      index = nb_truncated-1;
+
+      while(slots_remaining) {
+        if (tokens[index].second < tokens[index].first.size()) {
+          ++tokens[index].second;
+          --slots_remaining;
+        }
+
+        --index;
+        if (nb_truncated -1 < index)
+          index = nb_truncated - 1;
+      }
     }
+  }
+  else {
+    tokens.emplace_back("",0);
   }
 
   // Rendering
-  size_rep = 0;
+  size_t size_rep = 0;
   size_t not_printable_str_size = 0;
   ostringstream dir_rep;
   for(auto const& token : tokens) {
