@@ -8,6 +8,7 @@
 #include <string>
 #include <tuple>
 #include <vector>
+//#include <wstring>
 
 using std::array;
 using std::deque;
@@ -21,12 +22,14 @@ using std::size_t;
 using std::pair;
 using std::istringstream;
 using std::vector;
+using std::wstring;
 
 struct ColorCodes {
   string blank;
   string complete_folder;
   string truncated_folder;
   string folder_sep;
+  string error;
 };
 
 int main(int argc, char* argv[]) {
@@ -47,16 +50,25 @@ int main(int argc, char* argv[]) {
   }
 
   ColorCodes codes;
+  size_t auto_truncate = 0;
   if(5 < argc) {
-    array<string,5> extracted_codes;
+    array<string,6> extracted_codes;
     for(int index = 4; index < argc-!(argc%2); index+=2) {
       string key(argv[index]);
       string val(argv[index+1]);
+      wstring wval(reinterpret_cast<wchar_t*>(argv[index+1]));
       if(key == "--color") {
         istringstream input(val);
         for(int index = 0; index < extracted_codes.size() && getline(input, val, ':'); ++index) extracted_codes[index] = val;
-        codes = {extracted_codes[0], extracted_codes[1], extracted_codes[2], extracted_codes[3]};
+        codes = {extracted_codes[0], extracted_codes[1], extracted_codes[2], extracted_codes[3], extracted_codes[4]};
       }
+      if(key == "--truncate") {
+        auto_truncate = std::stoul(val);
+      }
+      //if(key == "--chars") {
+        //no_error = wval[0];
+        //empty_char = wval[1];
+      //}
     }
   }
 
@@ -65,11 +77,11 @@ int main(int argc, char* argv[]) {
   istringstream tokenizer_stream(current_dir);
   string token;
   while (std::getline(tokenizer_stream, token, '/')) {
-    if (token.size()) tokens.emplace_back(token, token.size());
+    if (token.size()) tokens.emplace_back(token, auto_truncate ? std::min(auto_truncate, token.size()) : token.size());
   }
 
   size_t nb_tokens = tokens.size();
-  int dir_list_max_size = max_size - 7;
+  int dir_list_max_size = max_size - 4;
 
   if (nb_tokens) {
     // Searching the optimized directory string
@@ -86,7 +98,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Fitting
-    if (nb_complete < nb_tokens) {
+    //if (nb_complete < nb_tokens) {
       size_t index = 0;
       for(auto& token : tokens) {
         if (index < tokens.size() - nb_complete) 
@@ -97,13 +109,19 @@ int main(int argc, char* argv[]) {
       }
 
       size_t slots_remaining = dir_list_max_size - size_rep;
-      size_t nb_truncated = tokens.size() - nb_complete;
-      size_t nb_truncated_filled = 0;
+      size_t nb_truncated = tokens.size(); // - nb_complete;
       index = nb_truncated-1;
+      nb_complete = 0;
+      for(auto const & token : tokens) {
+        if (token.first.size() == token.second)
+          ++nb_complete;
+      }
 
-      while(slots_remaining) {
+      while(slots_remaining && nb_complete < nb_tokens) {
         if (tokens[index].second < tokens[index].first.size()) {
           ++tokens[index].second;
+          if(tokens[index].first.size() == tokens[index].second)
+            ++nb_complete;
           --slots_remaining;
         }
 
@@ -111,7 +129,7 @@ int main(int argc, char* argv[]) {
         if (nb_truncated -1 < index)
           index = nb_truncated - 1;
       }
-    }
+    //}
   }
   else {
     tokens.emplace_back("",0);
@@ -128,7 +146,13 @@ int main(int argc, char* argv[]) {
   }
 
   // Printing the prompt
-  std::cout << "[" << setfill('0') << setw(3) << return_code << "]";
+  //std::cout << "[";
+  if (return_code)
+    std::cout << codes.error << "EE" << codes.blank;
+  else
+    std::cout << "[]";
+  //std::cout<< "]";
+
   std::cout << "(" << setfill('.') << setw(dir_list_max_size + not_printable_str_size) << dir_rep.str() << ")";
   std::cout << std::endl;
 

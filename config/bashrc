@@ -11,7 +11,24 @@ alias ls='ls --color=auto'
 # Custom prompt, need to have cppprompt compiled
 pchar_blank=$(echo -e "\001\033[0m\002")
 pchar_folder_sep=$(echo -e "\001\033[0;31m\002")
-PS1='`${HOME}/.tools/bin/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}"`\[\033[01;31m\]\$\[\033[00m\] '
+pchar_error=$(echo -e "\001\033[0;31m\002")
+neutral_char=$(echo -e "\u2237")
+no_error_char=$(echo -e "\u2591")
+
+
+# 2185                                                                                                                                                                                                                                         
+# 2237 *                                                                                                                                                                                                                                       
+# 2261                                                                                                                                                                                                                                         
+# 2299 bof                                                                                                                                                                                                                                     
+# 2588                                                                                                                                                                                                                                         
+# 2591 *                                                                                                                                                                                                                                       
+# 2592                                                                                                                                                                                                                                         
+# 2616                                                                                                                                                                                                                                         
+# 2617                                                                                                                                                                                                                                         
+# 2302                                                                                                                                                                                                                                         
+# 2616 *
+
+PS1='`${HOME}/.tools/bin/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}:${pchar_error}" --truncate 6 --chars "${no_error_char}${neutral_char}"`\[\033[01;31m\]\$\[\033[00m\] '
 
 # Completion
 if [ -f /etc/bash_completion ]; then
