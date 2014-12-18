@@ -74,8 +74,10 @@ nmap N Nzz
 imap ² <Esc>
 
 " Comment/Uncomment
-map ,c :s,^\(\s*\),\1//,g<CR>
-map ,x :s,^\(\s*\)//,\1,g<CR>
+let comment_extensions  = ["h" ,"hh","hpp","c" ,"cpp","cc","py","lua","vim"]
+let comment_chars       = ["//","//","//" ,"//","//" ,"//","#" ,"-- ","\" ","#"]
+noremap <silent> ,c :s/^\(\s*\)/\=get(comment_chars,index(comment_extensions, expand('%:e')))/g<CR>
+noremap <silent> ,x :s,^\(\s*\)<c-r>=get(comment_chars,index(comment_extensions, expand('%:e')))<CR>,\1,g<CR>
 
 " Avoid vimdiff to diff on spaces
 set diffopt+=iwhite
