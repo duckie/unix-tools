@@ -74,10 +74,15 @@ nmap N Nzz
 imap ² <Esc>
 
 " Comment/Uncomment
-let comment_extensions  = ["h" ,"hh","hpp","c" ,"cpp","cc","py","lua","vim"]
-let comment_chars       = ["//","//","//" ,"//","//" ,"//","#" ,"-- ","\" ","#"]
-noremap <silent> ,c :s/^\(\s*\)/\=get(comment_chars,index(comment_extensions, expand('%:e')))/g<CR>
-noremap <silent> ,x :s,^\(\s*\)<c-r>=get(comment_chars,index(comment_extensions, expand('%:e')))<CR>,\1,g<CR>
+autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
+autocmd FileType sh,ruby,python   let b:comment_leader = '#'
+autocmd FileType conf,fstab       let b:comment_leader = '#'
+autocmd FileType tex              let b:comment_leader = '%'
+autocmd FileType mail             let b:comment_leader = '> '
+autocmd FileType vim              let b:comment_leader = '" '
+autocmd FileType lua              let b:comment_leader = '-- '
+noremap <silent> ,c :s/^\(\s*\)/\=b:comment_leader/g<cr>
+noremap <silent> ,x :s,^\(\s*\)<c-r>=b:comment_leader<cr>,\1,g<cr>
 
 " Avoid vimdiff to diff on spaces
 set diffopt+=iwhite
