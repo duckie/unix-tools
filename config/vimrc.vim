@@ -74,6 +74,7 @@ nmap N Nzz
 imap ² <Esc>
 
 " Comment/Uncomment
+let b:comment_leader = '#'
 autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
 autocmd FileType sh,ruby,python   let b:comment_leader = '#'
 autocmd FileType conf,fstab       let b:comment_leader = '#'
@@ -81,7 +82,7 @@ autocmd FileType tex              let b:comment_leader = '%'
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 autocmd FileType lua              let b:comment_leader = '-- '
-noremap <silent> ,c :s/^\(\s*\)/\=b:comment_leader/g<cr>
+noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).b:comment_leader/g<cr>
 noremap <silent> ,x :s,^\(\s*\)<c-r>=b:comment_leader<cr>,\1,g<cr>
 
 " Avoid vimdiff to diff on spaces
