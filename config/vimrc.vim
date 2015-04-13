@@ -4,6 +4,10 @@ syn on
 
 set nocompatible
 
+" Disable vim backup
+set nobackup
+set noswapfile
+
 " General layout
 set background=dark " Set contrasts to make a dark bh usable
 set noerrorbells " Get rid of this shit
@@ -36,6 +40,7 @@ set cindent
 set nowrap
 
 " Tabulation management
+set backspace=indent,eol,start
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -142,3 +147,7 @@ endfunction
 
 set tabline=%!MyTabLine()
 
+" Plugins config
+let g:ycm_min_num_of_chars_for_completion=3
+let g:ycm_confirm_extra_conf=0
+set completeopt=menuone
