@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Try first with a git root
+source_dir=""
+git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+if [ "${git_root}" != "" ]; then
+  source_dir=${git_root}
+else
+  # We try with the current directory
+  source_dir=$(pwd)
+fi
+
+# Search for a build dir, same level
+repo_name=$(basename ${source_dir})
+parent_dir=$(dirname ${source_dir})
+build_dir=""
+for search_dir in "${source_dir}/build" "${parent_dir}/build-${repo_name}" "${parent_dir}/${repo_name}-build"; do
+  for build_pattern in "clang/debug" "debug/clang" "gcc/debug" "debug/gcc" "clang" "gcc" ""; do
+    if [ -d "${search_dir}" ]; then
+      candidate_file=$(find "${search_dir}" -name CMakeCache.txt -regex .*${build_pattern}.*)
+      if [[ "${candidate_file}" != "" ]]; then
+        candidate_dir=$(dirname ${candidate_file})
+        if [ -d "${candidate_dir}" ]; then
+          build_dir=${candidate_dir}
+          break
+        fi
+      fi
+    fi
+  done
+  if [ -d "${build_dir}" ]; then
+    break;
+  fi
+done
+
+if [ -d "${build_dir}" -a "${build_dir}" != "" ]; then
+  #echo ${build_dir}
+  make --no-print-directory -C ${build_dir} $@
+  exit $?
+fi
+
+echo "No build directory found."
+exit 1
+
+
