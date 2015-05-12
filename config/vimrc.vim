@@ -75,7 +75,10 @@ imap ² <Esc>
 
 " Comment/Uncomment
 let b:comment_leader = '#'
-autocmd FileType c,cpp,java,scala let b:comment_leader = '//'
+autocmd FileType c,cpp            let b:comment_leader = '//'
+autocmd FileType java,scala       let b:comment_leader = '//'
+autocmd FileType javascript,json  let b:comment_leader = '//'
+autocmd FileType php              let b:comment_leader = '//'
 autocmd FileType sh,ruby,python   let b:comment_leader = '#'
 autocmd FileType conf,fstab       let b:comment_leader = '#'
 autocmd FileType tex              let b:comment_leader = '%'
