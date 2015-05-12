@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+# Exits if something goes wrong
+set -e
+
+as_root_prefix=""
+if [[ "$1" == "-r" || "$1" == "--root" ]]; then
+  as_root_prefix="sudo"
+  shift
+fi
+
+command_prefix=""
+if [[ "${DIRDIFF_PREFIX}" != "" ]]; then
+  command_prefix="${DIRDIFF_PREFIX}"
+fi
+
+sourcedir="$1"
+destdir="$2"
+export IFS=" "
+diff -rq ${sourcedir} ${destdir} | while read -a line; do
+  case ${line[0]} in
+    Files )
+      source_file=${line[1]}
+      dest_file=${line[3]}
+      echo ${source_file} "<=>" ${dest_file}
+      read -p "Launch vimdiff between files ? [y/N] " yn </dev/tty
+      case $yn in
+        [Yy]* ) 
+          ${as_root_prefix} ${command_prefix} vimdiff "${source_file}" "${dest_file}" </dev/tty;
+          echo "Vimdiff terminated.";;
+        * ) 
+          echo "Skipped.";;
+      esac
+      echo "";;
+    Only )
+      dir_arg=${line[2]}
+      source_dir=${line[2]:0:-1}
+      source_file=${line[3]}
+
+      source_sub_dir="${source_dir##${sourcedir}}" 
+      if [[ "${source_sub_dir}" != "${source_dir}" ]]; then
+        echo "${source_dir}/${source_file}" "<=>" "![missing]"
+        cond_break=0
+        if [ -d "${source_dir}/${source_file}" ]; then
+          while [[ ${cond_break} == 0 ]]; do
+            read -p "Copy directory as ${destdir}/${source_sub_dir}/${source_file} ? (y = yes, l = list, f = find) [y/l/f/N] " yn </dev/tty
+            case $yn in
+              [Yy]* ) 
+                ${as_root_prefix} ${command_prefix} cp -rv "${source_dir}/${source_file}" "${destdir}/${source_sub_dir}/${source_file}" </dev/tty;
+                cond_break=1;;
+              [Ll]* )
+                ${as_root_prefix} ${command_prefix} ls "${source_dir}/${source_file}" </dev/tty
+                ;;
+              [Ff]* )
+                ${as_root_prefix} ${command_prefix} find "${source_dir}/${source_file}" </dev/tty
+                ;;
+              * ) 
+                echo "Skipped."
+                cond_break=1;;
+            esac
+          done
+        else
+          while [[ ${cond_break} == 0 ]]; do
+            read -p "Copy file as ${destdir}/${source_sub_dir}/${source_file} ? (y = yes, n = no, e = edit, v = view) [y/e/v/N] " yn </dev/tty
+            case $yn in
+              [Yy]* ) 
+                ${as_root_prefix} ${command_prefix} cp -v "${source_dir}/${source_file}" "${destdir}/${source_sub_dir}/${source_file}" </dev/tty;
+                cond_break=1;;
+              [Ee]* )
+                ${as_root_prefix} ${command_prefix} vim "${source_dir}/${source_file}" </dev/tty
+                ;;
+              [Vv]* )
+                ${as_root_prefix} ${command_prefix} less "${source_dir}/${source_file}" </dev/tty
+                ;;
+              * ) 
+                echo "Skipped."
+                cond_break=1;;
+            esac
+          done
+        fi
+      else
+        echo "![missing]" "<=>" "${source_dir}/${source_file}"
+        cond_break=0
+        if [ -d "${source_dir}/${source_file}" ]; then
+          while [[ ${cond_break} == 0 ]]; do
+            read -p "Delete directory ${source_dir}/${source_file} ? (y = yes, l = list, f = find) [y/l/f/N] " yn </dev/tty
+            case $yn in
+              [Yy]* ) 
+                ${as_root_prefix} ${command_prefix} rm -rv "${source_dir}/${source_file}" </dev/tty;
+                cond_break=1;;
+              [Ll]* )
+                ${as_root_prefix} ${command_prefix} ls "${source_dir}/${source_file}" </dev/tty
+                ;;
+              [Ff]* )
+                ${as_root_prefix} ${command_prefix} find "${source_dir}/${source_file}" </dev/tty
+                ;;
+              * ) 
+                echo "Skipped."
+                cond_break=1;;
+            esac
+          done
+        else
+          while [[ ${cond_break} == 0 ]]; do
+            read -p "Delete file ${source_dir}/${source_file} ? (y = yes, n = no, e = edit, v = view) [y/e/v/N] " yn </dev/tty
+            case $yn in
+              [Yy]* ) 
+                ${as_root_prefix} ${command_prefix} rm -v "${source_dir}/${source_file}" </dev/tty
+                cond_break=1;;
+              [Ee]* )
+                ${as_root_prefix} ${command_prefix} vim "${source_dir}/${source_file}" </dev/tty
+                ;;
+              [Vv]* )
+                ${as_root_prefix} ${command_prefix} less "${source_dir}/${source_file}" </dev/tty
+                ;;
+              * ) 
+                echo "Skipped."
+                cond_break=1;;
+            esac
+          done
+        fi
+      fi
+      echo "";;
+    *)
+      echo ${line}
+      echo "Line format unkown, skipped."
+  esac
+done
+
+
