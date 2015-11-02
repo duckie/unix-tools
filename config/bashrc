@@ -40,6 +40,9 @@ if [ ${TERM} = "xterm" ]; then
 	export TERM="xterm-256color"
 fi
 
+# Default editor
+export EDITOR=vim
+
 # SSH with tmux
 ssh() {
   # Do nothing if we are not inside tmux or ssh is called without arguments
