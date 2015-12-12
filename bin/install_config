@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+CONFPATH="$(dirname ${SCRIPTPATH})/config"
+RSCPATH="$(dirname ${SCRIPTPATH})/resources"
+
+echo "source ${CONFPATH}/bashrc" >> ${HOME}/.bashrc
+echo "source ${CONFPATH}/vimrc.vim" >> ${HOME}/.vimrc
+echo "source-file ${CONFPATH}/tmux.conf" >> ${HOME}/.tmux.conf
+cp -r ${RSCPATH}/vim/.vim ${HOME}/
