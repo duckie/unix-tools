@@ -1,8 +1,15 @@
-filetype on
-filetype plugin on
-syn on
-
 set nocompatible
+filetype off
+
+" Initilialize Vundle
+set rtp+=~/.tools/external/vim/vundle
+call vundle#begin()
+Plugin 'Valloric/YouCompleteMe'
+call vundle#end()
+filetype plugin indent on
+" filetype on
+" filetype plugin on
+syn on
 
 " Disable vim backup
 set nobackup
