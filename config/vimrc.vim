@@ -13,6 +13,7 @@ set background=dark " Set contrasts to make a dark bh usable
 set noerrorbells " Get rid of this shit
 set novisualbell " Get rid of this shit
 set hidden " Hides abandoned buffers
+set ttyfast
 
 " Colors and encoding
 colorscheme molokai
