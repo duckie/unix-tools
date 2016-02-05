@@ -69,6 +69,10 @@ ssh() {
 # No history dups
 export HISTCONTROL=ignoreboth:erasedups
 
+# Development
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+
 # Molokai theme
 #declare map0
 #map0=(  [foreground     ]='#F8F8F2'     [background     ]='#272822'
