@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+battery_status=""
+while read device_id; do
+  cur_status="$(upower -i ${device_id})"
+  temp_file=$(mktemp -p /dev/shm) 
+  upower -i ${device_id} > ${temp_file}
+  percent=$(cat ${temp_file}|grep "percentage:"|tr -s " "|cut -d " " -f3)
+  battery_status="${battery_status}${percent} "
+  rm ${temp_file}
+done < <(upower -e|grep /org/freedesktop/UPower/devices/battery_)
+
+echo ${battery_status}
