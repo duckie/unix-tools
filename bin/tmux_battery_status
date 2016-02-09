@@ -2,7 +2,6 @@
 
 battery_status=""
 while read device_id; do
-  cur_status="$(upower -i ${device_id})"
   temp_file=$(mktemp -p /dev/shm) 
   upower -i ${device_id} > ${temp_file}
   percent=$(cat ${temp_file}|grep "percentage:"|tr -s " "|cut -d " " -f3)
