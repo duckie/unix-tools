@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
 battery_status=""
+
+type upower > /dev/null 2>&1
+ret=$?
+if [[ 0 < $ret ]]; then
+  exit 0
+fi
+
 while read device_id; do
   temp_file=$(mktemp -p /dev/shm) 
   upower -i ${device_id} > ${temp_file}
