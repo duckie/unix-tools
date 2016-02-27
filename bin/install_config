@@ -4,7 +4,17 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 CONFPATH="$(dirname ${SCRIPTPATH})/config"
 RSCPATH="$(dirname ${SCRIPTPATH})/resources"
 
-echo "source ${CONFPATH}/bashrc" >> ${HOME}/.bashrc
-echo "source ${CONFPATH}/vimrc.vim" >> ${HOME}/.vimrc
-echo "source-file ${CONFPATH}/tmux.conf" >> ${HOME}/.tmux.conf
+insert_once() {
+  nb_lines=0
+  if [ -f "$2" ]; then
+    nb_lines=$(grep -F "$1" "$2"|wc -l)
+  fi
+  if [[ 0 == $nb_lines ]]; then
+    echo "$1" >> "$2"
+  fi
+}
+
+insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
+insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
+insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 cp -r ${RSCPATH}/vim/.vim ${HOME}/
