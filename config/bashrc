@@ -5,6 +5,12 @@ if [ -d ${HOME}/bin ]; then
   export PATH=${HOME}/bin:$PATH
 fi
 
+export GOPATH=${HOME}/gocode
+if [ -d ${GOPATH}/bin ]; then
+  export PATH=${GOPATH}/bin:$PATH
+fi
+
+
 # Aliases
 alias ls='ls --color=auto'
 

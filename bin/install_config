@@ -18,3 +18,4 @@ insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 cp -r ${RSCPATH}/vim/.vim ${HOME}/
+mkdir -p ${HOME}/gocode
