@@ -1,6 +1,10 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+SCRIPTPATH="$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
+TOOLS_BIN_PATH=$(dirname "${SCRIPTPATH}")/bin
+export PATH=${TOOLS_BIN_PATH}:$PATH
+
 if [ -d ${HOME}/bin ]; then
   export PATH=${HOME}/bin:$PATH
 fi
@@ -34,7 +38,7 @@ no_error_char=$(echo -e "\u2591")
 # 2302                                                                                                                                                                                                                                         
 # 2616 *
 
-PS1='`${HOME}/.tools/bin/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}:${pchar_error}" --truncate 6 --chars "${no_error_char}${neutral_char}"`\[\033[01;31m\]\$\[\033[00m\] '
+PS1='`${TOOLS_BIN_PATH}/cppprompt $? "$(pwd)" 38 --color "${pchar_blank}:${pchar_blank}:${pchar_blank}:${pchar_folder_sep}:${pchar_error}" --truncate 6 --chars "${no_error_char}${neutral_char}"`\[\033[01;31m\]\$\[\033[00m\] '
 
 # Completion
 if [ -f /etc/bash_completion ]; then
