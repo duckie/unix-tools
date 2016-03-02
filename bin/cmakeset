@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+#Script used to switch values easily in a CMakeCahe.txt
+
+if [ ! -f CMakeCache.txt ]; then
+  echo "No CMakeCache.txt file in current path."
+  exit 1
+fi
+
+key=$1
+val=$2
+
+# Extract current value and aliases from cmakeget script
+current_value=$(${SCRIPTPATH}/cmakeget $key $val)
+if [[ "${current_value}" != "" ]]; then
+  key=$(echo ${current_value}|cut -d ":" -f1)
+  ktype=$(echo ${current_value}|cut -d ":" -f2|cut -d "=" -f1)
+  new_value="${key}:${ktype}=${val}"
+  sed -i "s/^${key}:\(STRING\|PATH\|FILEPATH\|BOOL\)=.*$/${new_value}/" CMakeCache.txt
+  echo "Previous: ${current_value}"
+  echo "New:      ${new_value}"
+fi
+
+
+

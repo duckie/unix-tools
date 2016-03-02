@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+#Script used to read values easily in a CMakeCahe.txt
+
+if [ ! -f CMakeCache.txt ]; then
+  echo "No CMakeCache.txt file in current path."
+  exit 1
+fi
+
+key=$1
+val=$2
+
+# Apply aliases
+case "$key" in
+  rel)
+    key=CMAKE_BUILD_TYPE
+    ;;
+  *) # Nothing
+    ;;
+esac
+
+if [[ "$key" != "" ]]; then
+  grep "^${key}:\(STRING\|PATH\|FILEPATH\|BOOL\)=" CMakeCache.txt
+fi
