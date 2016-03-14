@@ -4,6 +4,7 @@ filetype off
 " Initilialize Vundle
 set rtp+=~/.tools/external/vim/vundle
 call vundle#begin()
+Plugin 'tpope/vim-surround'
 Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
 filetype plugin indent on
