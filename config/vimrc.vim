@@ -6,6 +6,7 @@ set rtp+=~/.tools/external/vim/vundle
 call vundle#begin()
 Plugin 'tpope/vim-surround'
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'christoomey/vim-tmux-navigator'
 call vundle#end()
 filetype plugin indent on
 " filetype on
