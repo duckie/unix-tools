@@ -168,4 +168,4 @@ set completeopt=menuone
 
 " Shortcuts to plugins
 noremap <C-H> :YcmCompleter GoTo<cr>
-" map <C-I> :pyf /app/data/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/share/clang/clang-format.py<cr>
+map <C-I> :pyf /usr/share/clang/clang-format.py<cr>
