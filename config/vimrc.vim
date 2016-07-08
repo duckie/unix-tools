@@ -6,9 +6,10 @@ set rtp+=~/.tools/external/vim/vundle
 call vundle#begin()
 Plugin 'Valloric/YouCompleteMe'
 call vundle#end()
+
 filetype plugin indent on
-" filetype on
-" filetype plugin on
+filetype on
+filetype plugin on
 syn on
 
 " Disable vim backup
@@ -52,6 +53,7 @@ set backspace=indent,eol,start
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+set shortmess=filnxtToO 
 set smarttab
 set expandtab
 
@@ -98,8 +100,8 @@ autocmd FileType tex              let b:comment_leader = '%'
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 autocmd FileType lua              let b:comment_leader = '-- '
-noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).b:comment_leader/g<cr>
-noremap <silent> ,x :s,^\(\s*\)<c-r>=b:comment_leader<cr>,\1,g<cr>
+noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).b:comment_leader/g <bar> :nohl<cr>
+noremap <silent> ,x :s,^\(\s*\)<c-r>=b:comment_leader<cr>,\1,g <bar> :nohl <cr>
 
 " Avoid vimdiff to diff on spaces
 set diffopt+=iwhite
@@ -161,4 +163,9 @@ set tabline=%!MyTabLine()
 " Plugins config
 let g:ycm_min_num_of_chars_for_completion=3
 let g:ycm_confirm_extra_conf=0
+let g:ycm_goto_buffer_command = 'new-tab'
 set completeopt=menuone
+
+" Shortcuts to plugins
+noremap <C-H> :YcmCompleter GoTo<cr>
+" map <C-I> :pyf /app/data/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/share/clang/clang-format.py<cr>
