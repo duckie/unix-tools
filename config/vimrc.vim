@@ -1,5 +1,7 @@
 set nocompatible
 filetype off
+" Cleanup autocommands to avoid multiple sourcing 
+autocmd!
 
 " Initilialize Vundle
 set rtp+=~/.tools/external/vim/vundle
@@ -8,9 +10,10 @@ Plugin 'tpope/vim-surround'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'christoomey/vim-tmux-navigator'
 call vundle#end()
+
 filetype plugin indent on
-" filetype on
-" filetype plugin on
+filetype on
+filetype plugin on
 syn on
 
 " Disable vim backup
@@ -54,6 +57,7 @@ set backspace=indent,eol,start
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
+" set shortmess=filnxtToO 
 set smarttab
 set expandtab
 
@@ -88,8 +92,26 @@ nmap n nzz
 nmap N Nzz
 imap ² <Esc>
 
+" Function to get variables first in buffer then in global
+" by Salman Halim
+" http://vim.wikia.com/wiki/Letting_variable_values_be_overwritten_in_a_script
+" 
+function! GetVar(...)
+  let varName=a:1
+  if (exists("a:2"))
+    let retVal=a:2
+  else
+    let retVal=-1
+  endif
+  if (exists ("b:" . varName))
+    exe "let retVal=b:" . varName
+  elseif (exists ("g:" . varName))
+    exe "let retVal=g:" . varName
+  endif
+  return retVal
+endfunction
+
 " Comment/Uncomment
-let b:comment_leader = '#'
 autocmd FileType c,cpp            let b:comment_leader = '//'
 autocmd FileType java,scala       let b:comment_leader = '//'
 autocmd FileType javascript,json  let b:comment_leader = '//'
@@ -100,8 +122,9 @@ autocmd FileType tex              let b:comment_leader = '%'
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 autocmd FileType lua              let b:comment_leader = '-- '
-noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).b:comment_leader/g<cr>
-noremap <silent> ,x :s,^\(\s*\)<c-r>=b:comment_leader<cr>,\1,g<cr>
+
+noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).GetVar("comment_leader","#")/g <bar> :nohl<cr>
+noremap <silent> ,x :s,^\(\s*\)<c-r>=GetVar("comment_leader","#")<cr>,\1,g <bar> :nohl <cr>
 
 " Avoid vimdiff to diff on spaces
 set diffopt+=iwhite
@@ -163,4 +186,9 @@ set tabline=%!MyTabLine()
 " Plugins config
 let g:ycm_min_num_of_chars_for_completion=3
 let g:ycm_confirm_extra_conf=0
+let g:ycm_goto_buffer_command = 'new-tab'
 set completeopt=menuone
+
+" Shortcuts to plugins
+noremap <C-H> :YcmCompleter GoTo<cr>
+map <C-I> :pyf /usr/share/clang/clang-format.py<cr>
