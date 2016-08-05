@@ -17,26 +17,12 @@ insert_once() {
   fi
 }
 
-copy_once() {
-  target_dir=$(dirname $2)
-  if [ ! -d "${target_dir}" ]; then
-    mkdir -p "${target_dir}"
-  fi
-
-  if [ ! -f "$2" ]; then
-    cp "$1" "$2"
-    echo "Installed \"$2\"."
-  else
-    echo "\"$2\" already installed."
-  fi
-}
-
 insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 
-copy_once "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
-copy_once "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
-
-cp -r ${RSCPATH}/vim/.vim ${HOME}/
+rsync -avz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
+rsync -avz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
+rsync -avz ${RSCPATH}/vim/.vim ${HOME}/
 mkdir -p ${HOME}/gocode
+
