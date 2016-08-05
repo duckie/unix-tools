@@ -15,6 +15,8 @@ filetype plugin indent on
 filetype on
 filetype plugin on
 syn on
+" Cope with horribly slow yaml syntax of vim 7.4
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 
 " Disable vim backup
 set nobackup
