@@ -138,17 +138,79 @@ cabbr <expr> %% expand('%:p:h')
 let @i='?}^M%^^t(byT t{l%/\w^Mt ll"0Pt;lxA {^M}^M^['
 set fillchars=vert:\ ,stl:\ ,stlnc:\
 "  Switch between header and implementation
-function SwitchHeaderImpl()
-  let ext=expand("%:e")
-  if ext ==? "c" || ext ==? "cc" || ext == "cpp"
-    return expand("%:r").".h*"
-  elseif ext ==? "h" || ext ==? "hh" || ext == "hpp"
-    return expand("%:r").".c*"
-  endif
+function SwitchHeaderImpl(open_command)
+python << endpython
+import vim, os
+
+# Static data
+h_ext = [".h",".hh",".hpp",".hxx"]
+c_ext = [".c",".cc",".cpp",".cxx"]
+
+# Extract current file data
+filepath = vim.current.buffer.name.split("/")
+filename = filepath[-1]
+dot_position = filename.rfind(".")
+ext = filename[dot_position:]
+basename = filename[:dot_position]
+if not ext in h_ext and not ext in c_ext:
+  print("Not a C/C++ file.")
+  vim.command("return")
+
+# Which extension do we search for
+ext_to_search = c_ext if ext in h_ext else h_ext
+
+# Search for file
+file_found = None
+left_part = filepath[:-1]
+current_source_sub = None
+right_part = [basename]
+while True:
+  # Search a candidate
+  subs = ["."]
+  if current_source_sub is not None:
+    # List subdirs
+    base_dir_for_list = "/" + "/".join(left_part)
+    subs = [name for name in os.listdir(base_dir_for_list) if os.path.isdir(os.path.join(base_dir_for_list, name))]
+
+  for sub in subs:
+    # Do not search in existing (already done at first iteration
+    if sub != current_source_sub:
+      candidate_path = "/".join(left_part + [sub] + right_part)
+      for ext in ext_to_search:
+        candidate_file = candidate_path + ext
+        # print(candidate_file)
+        if os.path.isfile(candidate_file):
+          file_found = candidate_file
+          # Stop search extensions
+          break
+    # Stop searching in subs
+    if file_found is not None:
+      break
+  
+  # Stop the whole search
+  if file_found is not None:
+    break
+
+  # Unfortunetaly, we failed
+  if 0 == len(left_part):
+    break
+
+  # Up to the next level
+  if current_source_sub is not None:
+    right_part.insert(0, current_source_sub)
+  current_source_sub = left_part[-1]
+  del left_part[-1]
+
+if file_found is None:
+  print("Failed to find paired file.")
+else:
+  vim.command("{} {}".format(vim.eval("a:open_command"),file_found))
+
+endpython
 endfunction
 "  Mapping on shortcuts
-map ,h :exec 'e '.SwitchHeaderImpl()<CR>
-map ,H :exec 'tab drop '.SwitchHeaderImpl()<CR>
+map ,h :call SwitchHeaderImpl('e')<CR>
+map ,H :call SwitchHeaderImpl('tab drop')<CR>
 
 " Custom tab pages with numbers
 set showtabline=2
@@ -192,5 +254,5 @@ let g:ycm_goto_buffer_command = 'new-tab'
 set completeopt=menuone
 
 " Shortcuts to plugins
-noremap <C-H> :YcmCompleter GoTo<cr>
+noremap <C-G> :YcmCompleter GoTo<cr>
 map <C-I> :pyf /usr/share/clang/clang-format.py<cr>
