@@ -118,7 +118,7 @@ function start_agent {
    . "${SSH_ENV}" > /dev/null
    #/usr/bin/ssh-add;
 }
-if [ 0 -lt "${TOOLS_ENABLE_SSH_AGENT}" ]; then
+if [ 0 -lt "0${TOOLS_ENABLE_SSH_AGENT}" ]; then
   # Source SSH settings, if applicable
   if [ -f "${SSH_ENV}" ]; then
      . "${SSH_ENV}" > /dev/null
