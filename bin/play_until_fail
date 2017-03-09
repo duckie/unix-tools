@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+rc=0
+while [[ $rc == 0 ]]; do
+  "$@"
+  rc=$?
+done
