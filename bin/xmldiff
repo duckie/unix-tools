@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+CONFPATH="$(dirname ${SCRIPTPATH})/config"
+RSCPATH="$(dirname ${SCRIPTPATH})/resources"
+
+left=$1
+right=$2
+templeft=$(mktemp $(basename ${left}).XXXXX)
+tempright=$(mktemp $(basename ${right}).XXXXX)
+
+# Making sure we clean at exit
+function finish {
+  rm "${templeft}"
+  rm "${tempright}"
+}
+trap finish EXIT
+
+xsltproc -o - "${RSCPATH}/xsl/identity.xsl" "${left}" | xmllint --format - > "${templeft}"
+xsltproc -o - "${RSCPATH}/xsl/identity.xsl" "${right}" | xmllint --format - > "${tempright}"
+vimdiff "${templeft}" "${tempright}"
+exit $?
