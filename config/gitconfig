@@ -1,0 +1,26 @@
+[user]
+	name = Jean-Bernard JANSEN
+[push]
+	default = simple
+[color]
+    ui      = auto        # Use terminal color when available
+[pull]
+    rebase  = preserve    # Ensure 'git pull' will use rebase instead of merge, preserving existing local merges
+[diff]
+    mnemonicPrefix = true # Improve "git diff" output of source/target
+    renames        = true # and detect renames
+    tool = vimdiff
+[log]
+    abbrevCommit   = true # Make "git log" show abbreviated SHA1
+[rerere]
+    enabled        = true # Make Git automatically record and re-apply conflicts resolution
+    autoupdate     = true # Automatically add to index auto-resolved conflicts
+[alias]
+    log1 = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset' --relative-date --ignore-space-change --ignore-blank-lines
+    log2 = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset' --date=iso --ignore-space-change --ignore-blank-lines
+    logf = log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset' --relative-date --ignore-space-change --ignore-blank-lines --follow --find-copies-harder
+    st = status
+    #track_all_remote_branches = ! git branch -a | grep \"^\\s*remotes/[^>]*$\"  | xargs --interactive -L1 git checkout --track
+    diff1 = diff --ignore-space-at-eol --ignore-space-change --ignore-all-space --ignore-blank-lines
+[core]
+    editor = vim
