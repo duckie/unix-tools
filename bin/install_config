@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+CURRENTPATH="$(pwd)"
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
-CONFPATH="$(dirname ${SCRIPTPATH})/config"
-RSCPATH="$(dirname ${SCRIPTPATH})/resources"
+ROOTPATH="$(dirname ${SCRIPTPATH})"
+CONFPATH="${ROOTPATH}/config"
+RSCPATH="${ROOTPATH}/resources"
+BINPATH="${ROOTPATH}/bin"
 
 insert_once() {
   nb_lines=0
@@ -20,10 +23,23 @@ insert_once() {
 insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
+insert_once "source ${CONFPATH}/gdbinit" ${HOME}/.gdbinit
 git config --global include.path .tools/config/gitconfig
 
-rsync -avz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
-rsync -avz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
-rsync -avz ${RSCPATH}/vim/.vim ${HOME}/
+rsync -qavz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
+rsync -qavz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
+rsync -qavz ${RSCPATH}/vim/.vim ${HOME}/
 mkdir -p ${HOME}/gocode
+
+if [ ! -f "${BINPATH}/cppprompt" ]; then
+  mkdir -p "${ROOTPATH}/cppprompt/build"
+  cd "${ROOTPATH}/cppprompt/build"
+  cmake ../ -DCMAKE_BUILD_TYPE=Release
+  make
+  mv cppprompt "${BINPATH}/"
+  cd "${CURRENTPATH}"
+  rm -r "${ROOTPATH}/cppprompt/build"
+else
+  echo "Cpp prompt exe already installed."
+fi
 

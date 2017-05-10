@@ -115,6 +115,7 @@ endfunction
 
 " Comment/Uncomment
 autocmd FileType c,cpp            let b:comment_leader = '//'
+autocmd FileType go               let b:comment_leader = '//'
 autocmd FileType java,scala       let b:comment_leader = '//'
 autocmd FileType javascript,json  let b:comment_leader = '//'
 autocmd FileType php              let b:comment_leader = '//'
