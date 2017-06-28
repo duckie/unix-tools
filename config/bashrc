@@ -1,17 +1,23 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="${PATH:+"$PATH:"}$1"
+  fi
+}
+
 SCRIPTPATH="$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
 TOOLS_BIN_PATH=$(dirname "${SCRIPTPATH}")/bin
-export PATH=${TOOLS_BIN_PATH}:$PATH
+pathadd ${TOOLS_BIN_PATH}
 
 if [ -d ${HOME}/bin ]; then
-  export PATH=${HOME}/bin:$PATH
+  pathadd ${HOME}/bin
 fi
 
 export GOPATH=${HOME}/gocode
 if [ -d ${GOPATH}/bin ]; then
-  export PATH=${GOPATH}/bin:$PATH
+  pathadd ${GOPATH}/bin
 fi
 
 
