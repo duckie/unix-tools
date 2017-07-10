@@ -1,0 +1,1 @@
+nohup play_until_success ./run_all.sh <&- &>/dev/null &
