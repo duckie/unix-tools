@@ -10,6 +10,8 @@
     mnemonicPrefix = true # Improve "git diff" output of source/target
     renames        = true # and detect renames
     tool = vimdiff
+[merge]
+    tool = vimdiff
 [log]
     abbrevCommit   = true # Make "git log" show abbreviated SHA1
 [rerere]
