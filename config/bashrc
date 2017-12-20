@@ -22,7 +22,12 @@ fi
 
 
 # Aliases
-alias ls='ls --color=auto'
+if [[ "$(uname)" == "Darwin" ]]; then
+  export CLICOLOR=1
+  export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+else
+  alias ls='ls --color=auto'
+fi
 
 # Custom prompt, need to have cppprompt compiled
 pchar_blank=$(echo -e "\001\033[0m\002")
