@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+import sys, re
+input = sys.stdin.readline()
+print(re.sub(r'[A-Z]', lambda x : "_" + x.group().lower(), input),end="")
