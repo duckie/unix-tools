@@ -29,7 +29,7 @@ git config --global include.path .tools/config/gitconfig
 rsync -qavz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
 rsync -qavz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
 rsync -qavz ${RSCPATH}/vim/.vim ${HOME}/
-mkdir -p ${HOME}/gocode
+mkdir -p ${HOME}/projects/go
 
 if [ ! -f "${BINPATH}/cppprompt" ]; then
   mkdir -p "${ROOTPATH}/cppprompt/build"

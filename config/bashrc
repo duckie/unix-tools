@@ -2,9 +2,12 @@
 [[ $- != *i* ]] && return
 
 pathadd() {
-  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-    PATH="${PATH:+"$PATH:"}$1"
-  fi
+  #echo $1 | tr -s ":" "\n" | while read dir; do 
+  while read dir; do 
+    if [ -d "$dir" ] && [[ ":$PATH:" != *":$dir:"* ]]; then
+      PATH="${PATH:+"$PATH:"}$dir"
+    fi
+  done< <(echo $1 | tr -s ":" "\n")
 }
 
 SCRIPTPATH="$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
@@ -15,10 +18,8 @@ if [ -d ${HOME}/bin ]; then
   pathadd ${HOME}/bin
 fi
 
-export GOPATH=${HOME}/gocode
-if [ -d ${GOPATH}/bin ]; then
-  pathadd ${GOPATH}/bin
-fi
+export GOPATH=${HOME}/gocode:${HOME}/projects/go
+pathadd ${HOME}/gocode/bin:${HOME}/projects/go/bin
 
 
 # Aliases
