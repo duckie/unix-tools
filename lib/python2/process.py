@@ -24,44 +24,41 @@ class CallablePipedProcess(object):
 
     def wait(self, timeout=-1):
         sep = "\n" # Might become a parameter
-        event_loop = select.poll()
-        buffers = {}
         for fd, values in self._fds.items():
-            event_loop.register(fd, select.POLLIN)
             values["buffer"] = ""
 
         time_remaining = timeout
         while True:
-            events = event_loop.poll()
-            for fd, event in events:
+            readable, _, exception = select.select(self._fds.keys(), [], self._fds.keys(), .1)
+            for fd in readable:
                 values = self._fds[fd]
-                if event & select.POLLIN and not event & select.POLLERR:
-                    data = os.read(fd, 8192)
-                    if 0 == len(data):
-                        values["func"](values["buffer"])
-                        self._fds[fd]["end"] = True
-                    else:
-                        chunks = data.split(sep)
-                        if 1 == len(chunks):
-                            self._fds[fd]["buffer"] += chunks[0]
-                        else:
-                            values["func"](values["buffer"]+chunks[0])
-                            for chunk in chunks[1:-1]:
-                                values["func"](chunk)
-                            self._fds[fd]["buffer"] = chunks[-1]
-                elif event & select.POLLHUP:
-		    if 0 < len(values["buffer"]):
-                        values["func"](values["buffer"])
+                data = os.read(fd, 8192)
+                if 0 == len(data):
+                    values["func"](values["buffer"])
                     self._fds[fd]["end"] = True
-                else: 
-                    raise ValueError("Unexpected event fd={} event={} {} {}".format(fd,event))
+                    print("Sup")
+                else:
+                    chunks = data.split(sep)
+                    if 1 == len(chunks):
+                        self._fds[fd]["buffer"] += chunks[0]
+                    else:
+                        values["func"](values["buffer"]+chunks[0])
+                        for chunk in chunks[1:-1]:
+                            values["func"](chunk)
+                        self._fds[fd]["buffer"] = chunks[-1]
+            for fd in exception:
+                values = self._fds[fd]
+                if 0 < len(values["buffer"]):
+                    values["func"](values["buffer"])
+                self._fds[fd]["end"] = True
 
             # If all are finished, we leave
             finished = True
             for fd, values in self._fds.items():
                 finished = finished and values["end"]
-            if finished:
+            if finished or self.process.poll() is not None:
                 break
+
         return self.process.wait()
 
     def __enter__(self):
