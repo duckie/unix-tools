@@ -11,31 +11,31 @@ class CallablePipedProcess(object):
         if not callable(func_out) or not callable(func_err):
             raise ValueError("The stdout and stderr arguments of CallablePipedProcess ctor must both be callables")
 
-        self._rout, self._wout = os.pipe()
-        self._rerr, self._werr = os.pipe()
+        #self._rout, self._wout = os.pipe()
+        #self._rerr, self._werr = os.pipe()
         self._fds = {}
-        self._fds[self._rout] = {"func":func_out, "end":False}
-        self._fds[self._rerr] = {"func":func_err, "end":False}
 
-        kwargs["stdout"] = self._wout
-        kwargs["stderr"] = self._werr
+        kwargs["stdout"] = subprocess.PIPE
+        kwargs["stderr"] = subprocess.PIPE
         kwargs["close_fds"] = True
         self.process = subprocess.Popen(*args, **kwargs)
+        self._fds[self.process.stdout.fileno()] = {"func":func_out, "end":False}
+        self._fds[self.process.stderr.fileno()] = {"func":func_err, "end":False}
 
     def wait(self, timeout=-1):
         sep = "\n" # Might become a parameter
-        event_loop = select.epoll()
+        event_loop = select.poll()
         buffers = {}
         for fd, values in self._fds.items():
-            event_loop.register(fd, select.EPOLLIN)
+            event_loop.register(fd, select.POLLIN)
             values["buffer"] = ""
 
         time_remaining = timeout
         while True:
-            events = event_loop.poll(timeout=.1)
+            events = event_loop.poll()
             for fd, event in events:
                 values = self._fds[fd]
-                if event & select.EPOLLIN and not event & select.EPOLLERR:
+                if event & select.POLLIN and not event & select.POLLERR:
                     data = os.read(fd, 8192)
                     if 0 == len(data):
                         values["func"](values["buffer"])
@@ -49,15 +49,16 @@ class CallablePipedProcess(object):
                             for chunk in chunks[1:-1]:
                                 values["func"](chunk)
                             self._fds[fd]["buffer"] = chunks[-1]
-                if event & select.EPOLLERR:
-                    values["func"](values["buffer"])
+                elif event & select.POLLHUP:
+		    if 0 < len(values["buffer"]):
+                        values["func"](values["buffer"])
                     self._fds[fd]["end"] = True
-                else:
-                    print("Unexpected event")
+                else: 
+                    raise ValueError("Unexpected event fd={} event={} {} {}".format(fd,event))
 
             # If all are finished, we leave
             finished = True
-            for fd, values in self._fds:
+            for fd, values in self._fds.items():
                 finished = finished and values["end"]
             if finished:
                 break
@@ -67,7 +68,8 @@ class CallablePipedProcess(object):
         pass
 
     def __exit__(self, type, value, tb):
-        os.close(self._rout)
-        os.close(self._rerr)
+        #os.close(self._rout)
+        #os.close(self._rerr)
+        pass
         
 
