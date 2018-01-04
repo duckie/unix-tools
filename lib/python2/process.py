@@ -11,14 +11,11 @@ class CallablePipedProcess(object):
         if not callable(func_out) or not callable(func_err):
             raise ValueError("The stdout and stderr arguments of CallablePipedProcess ctor must both be callables")
 
-        #self._rout, self._wout = os.pipe()
-        #self._rerr, self._werr = os.pipe()
-        self._fds = {}
-
         kwargs["stdout"] = subprocess.PIPE
         kwargs["stderr"] = subprocess.PIPE
         kwargs["close_fds"] = True
         self.process = subprocess.Popen(*args, **kwargs)
+        self._fds = {}
         self._fds[self.process.stdout.fileno()] = {"func":func_out, "end":False}
         self._fds[self.process.stderr.fileno()] = {"func":func_err, "end":False}
 
@@ -36,7 +33,6 @@ class CallablePipedProcess(object):
                 if 0 == len(data):
                     values["func"](values["buffer"])
                     self._fds[fd]["end"] = True
-                    print("Sup")
                 else:
                     chunks = data.split(sep)
                     if 1 == len(chunks):
@@ -65,8 +61,6 @@ class CallablePipedProcess(object):
         pass
 
     def __exit__(self, type, value, tb):
-        #os.close(self._rout)
-        #os.close(self._rerr)
         pass
         
 
