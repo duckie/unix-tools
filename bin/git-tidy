@@ -41,14 +41,32 @@ def list_merged():
       "message": subject
     }))
 
+
+def trim_local_merged():
+    # Get current branch
+    current_branch = execute_command(["git","symbolic-ref","--short","HEAD"]).decode("utf-8").strip()
+
+    # Get all merged
+    merged_list = execute_command(["git","branch","--format","%(refname:lstrip=2)","--merged"]).decode("utf-8").split()
+
+    # Delete them
+    for branch in merged_list:
+        if branch != current_branch:
+            execute_command(["git","branch","-d",branch])
+            print("{} deleted".format(branch))
+
+
+
 # Parse commad line
 parser = argparse.ArgumentParser(description="Tools to clean a shared git repository")
 #parser.add_argument("version", nargs=1, help="Version of the packages")
-parser.add_argument("--list-merged", action="store_true", help="List data about branch tips already merged")
+parser.add_argument("--list-merged-tips", action="store_true", help="List data about branch tips already merged")
+parser.add_argument("--trim-local-merged", action="store_true", help="Remove local branches already merged into current branch")
 args = parser.parse_args()
 
-if args.list_merged:
+if args.list_merged_tips:
   fetch()
   list_merged()
-  sys.exit(0)
 
+if args.trim_local_merged:
+    trim_local_merged()
