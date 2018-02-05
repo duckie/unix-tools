@@ -1,3 +1,3 @@
 nohup play_until_success ./run_all.sh <&- &>/dev/null &
-
-URRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )":w
+CURRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
+docker run --rm -it --privileged --pid=host walkerlee/nsenter -t 1 -m -u -i -n sh
