@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+sudo easy_install pip
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew install \
+  autoconf \
+  bash-completion \
+  cmake \
+  gdbm \
+  gettext \
+  git \
+  htop \
+  ninja \
+  pyenv \
+  python \
+  python3 \
+  readline \
+  rsync \
+  ruby \
+  sqlite \
+  tig \
+  tmux \
+  vim \
+  wget \
+  xz
+brew cask install \
+  docker \
+  firefox \
+  google-chrome \
+  hipchat \
+  iterm2 \
+  java \
+  keybase \
+  spotify \
+  zoomus
