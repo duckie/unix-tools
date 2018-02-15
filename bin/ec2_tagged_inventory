@@ -1,0 +1,60 @@
+#!/usr/bin/env python2
+
+import boto3
+import json
+import os
+import yaml
+from collections import defaultdict
+
+class MakeNamespace(object):
+    def __init__(self,values):
+        self.__dict__.update(values)
+
+# Open the configuration of current file
+conf = None
+if os.path.isfile("inventory-config.yml"):
+    conf = yaml.load(open("inventory-config.yml","r"))
+elif os.path.isfile("inventory-config.json"): 
+    conf = json.loads(open("inventory-config.json","r"))
+
+# Prepare shared state
+ansible_inventory = defaultdict(list)
+ansible_inventory["all"] = { "vars": {} }
+ansible_inventory["_meta"] = { "hostvars": {} }
+
+# Get the aws ec2 machines
+ec2_conf = conf['aws']['ec2']
+ec2_client = boto3.client('ec2')
+instances = ec2_client.describe_instances(
+        Filters = ec2_conf.get('filters',[]),
+        )
+ec2_group_by_tag = ec2_conf.get("group_by_tag",None)
+ec2_login_by_tag = ec2_conf.get("login_by_tag",None)
+for reservation in instances.get("Reservations",[]):
+    for instance_dict in reservation.get("Instances",[]):
+        instance = MakeNamespace(instance_dict)
+        #host = instance.PublicDnsName
+        host = instance.PublicIpAddress
+        tag_map = { tag["Key"] : tag["Value"] for tag in instance.Tags }
+        name = tag_map.get("Name",None)
+        facts = {
+            "public_dns_name": instance.PublicDnsName,
+            "public_ip": instance.PublicIpAddress,
+            "private_dns_name": instance.PrivateDnsName,
+            "private_ip": instance.PrivateIpAddress,
+            "tags": tag_map,
+            "is_ec2": True,
+        }
+        if name is not None:
+            ansible_inventory[name].append(host)
+        if ec2_group_by_tag is not None:
+            value = tag_map.get(ec2_group_by_tag, None)
+            if value is not None:
+                ansible_inventory[value].append(host)
+        if ec2_login_by_tag is not None:
+            value = tag_map.get(ec2_login_by_tag,None)
+            if value is not None:
+                facts["ansible_ssh_user"] = value
+        ansible_inventory["_meta"]["hostvars"][host] = facts
+
+print(json.dumps(ansible_inventory))
