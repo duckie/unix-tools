@@ -1,3 +1,6 @@
 nohup play_until_success ./run_all.sh <&- &>/dev/null &
 CURRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 docker run --rm -it --privileged --pid=host walkerlee/nsenter -t 1 -m -u -i -n sh
+ps xf
+tcpdump -w /tmp/dump.pcap -i lo port 40248 or port 45426
+lsof -p 24736 -a -i -P |grep LISTEN:w
