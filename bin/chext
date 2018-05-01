@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+[ 1 -lt "$#" ] # Asserts we have enough arguments to proceed
+filename="$1"
+extension="${filename##*.}"
+filename="${filename%.*}"
+mv "$1" "${filename}$2"
