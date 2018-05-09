@@ -28,3 +28,6 @@ XTerm*utf8: 1
 XTerm*locale: true
 ! XTerm*faceName: -misc-inconsolata-medium-r-normal--0-0-0-0-p-0-iso10646-1
 
+XTerm*VT100.cutNewLine: false
+XTerm*VT100.cutToBeginningOfLine: false
+XTerm*VT100.charClass: 33:48,35:48,37:48,42:48,45-47:48,64:48,95:48,126:48
