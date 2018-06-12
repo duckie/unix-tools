@@ -21,6 +21,7 @@ fi
 export GOPATH=${HOME}/gocode:${HOME}/projects/go
 pathadd ${HOME}/gocode/bin:${HOME}/projects/go/bin
 
+export GPG_TTY=$(tty)
 
 # Aliases
 if [[ "$(uname)" == "Darwin" ]]; then
