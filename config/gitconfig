@@ -5,7 +5,7 @@
 [color]
     ui      = auto        # Use terminal color when available
 [pull]
-    rebase  = preserve    # Ensure 'git pull' will use rebase instead of merge, preserving existing local merges
+    rebase  = true  # Ensure 'git pull' will use rebase instead of merge, preserving existing local merges
 [diff]
     mnemonicPrefix = true # Improve "git diff" output of source/target
     renames        = true # and detect renames
