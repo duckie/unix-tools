@@ -34,7 +34,7 @@ diff -rq ${sourcedir} ${destdir} | while read -a line; do
       echo "";;
     Only )
       dir_arg=${line[2]}
-      source_dir=${line[2]:0:-1}
+      source_dir=${line[2]:0:${#line[2]}-1}
       source_file=${line[3]}
 
       source_sub_dir="${source_dir##${sourcedir}}" 
