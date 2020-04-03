@@ -3,4 +3,68 @@ CURRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
 docker run --rm -it --privileged --pid=host walkerlee/nsenter -t 1 -m -u -i -n sh
 ps xf
 tcpdump -w /tmp/dump.pcap -i lo port 40248 or port 45426
+tcpdump -i any -w /tmp/dump.root tcp port 443 or tcp port 13456
 lsof -p 24736 -a -i -P |grep LISTEN:w
+
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab smartindent
+
+aws ec2 describe-images  --owners 898082745236 --filters Name=name,Values='Deep Learning AMI (Amazon Linux) Version*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &Name)[-1].ImageId'   --output text --region eu-west-3
+
+aws ec2 describe-images --owners 679593333241 --filters Name=name,Values='CentOS Linux 7 x86_64 HVM EBS*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &CreationDate)[-1].ImageId'   --output text --region eu-west-3
+aws ec2 describe-images --owners 898082745236 --filters Name=name,Values='Deep Learning AMI (Amazon Linux) Version*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &CreationDate)[-1].ImageId'   --output text --region eu-west-3
+aws ec2 describe-images --owners aws-marketplace --filters ‘Name=name,Values=dataiku-dss-6.0.1-*’ --query ‘Images[].ImageId’ --output text
+
+nvidia-smi --format=csv --query-gpu=uuid,name,index,utilization.gpu,memory.total,memory.free
+
+curl https://ipinfo.io/ip
+
+function join_by { local IFS="$1"; shift; echo "$*"; }
+
+
+openssl passwd -salt <salt> -1 <plaintext>
+
+{
+      "offer": "CentOS-CI",
+            "publisher": "OpenLogic",
+                "sku": "7-CI",
+                    "urn": "OpenLogic:CentOS-CI:7-CI:7.6.20190306",
+                        "version": "7.6.20190306"
+                            }
+
+az vm create --resource-group jbjansen-train01 --image "OpenLogic:CentOS-CI:7-CI:7.6.20190306" --ssh-key-value @~/.ssh/id_rsa.pub --vnet-name jbjansen-test --nsg jbjansen-test --name jbjansen-vm1
+az vm deallocate 
+
+exec > >(stdbuf -o 0 ts '[%Y-%m-%d %H:%M:%S] ' > $logdir/migration.log)
+exec 2>&1
+exec > >(while read log_line; do printf "[%s] %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "$log_line"; done)
+exec 2>&1
+
+# Python37
+sudo yum install -y readline-devel libuuid-devel sqlite-devel gdbm-devel gcc openssl-devel bzip2-devel libffi-devel
+./configure --prefix /opt/python37 --enable-shared --enable-ipv6 LDFLAGS="-Wl,-rpath=/opt/python37/lib"
+
+
+gcloud compute instances create --machine-type n1-standard-4 --network dku-office --zone europe-west1-b --subnet dku-office-europe-west1 --metadata block-project-ssh-keys=FALSE jbjansen-test1
+
+
+gcloud container clusters create --num-nodes 2 --preemptible --zone europe-west1-b --network dku-office --subnetwork dku-office-euwest-gke0 --cluster-secondary-range-name pods --services-secondary-range-name services --enable-ip-alias jbjansen-gke-1
+
+PY2 socket:
+
+import socket
+data = None
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  s.bind((os.environ["DKU_POD_IP"], 12349))
+  s.listen(20)
+  conn, addr = s.accept()
+  print('Connected by', addr)
+  print(conn.recv(1024))
+  conn.close()
+  s.close()
+
+
+aws ce get-cost-and-usage --time-period Start=2019-01-01,End=2019-11-01 --granularity MONTHLY --filter '{ "Dimensions": { "Key": "SERVICE", "Values": [ "Amazon Elastic Compute Cloud - Compute" ] } }' --metrics AmortizedCost --group-by Type=DIMENSION,Key=INSTANCE_TYPE
+
+socat UNIX-LISTEN:/var/run/dtkdevadm-github.sock,umask=077,user=dtkdevadm,fork "UNIX:$SSH_AUTH_SOCK"
+
+LANG=C.utf8 find /usr/lib/python3.6/site-packages/ -exec rpm -qf {} \; | grep "is not owned by any package"
