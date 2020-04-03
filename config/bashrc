@@ -18,7 +18,7 @@ if [ -d ${HOME}/bin ]; then
   pathadd ${HOME}/bin
 fi
 
-export GOPATH=${HOME}/gocode:${HOME}/projects/go
+export GOPATH=${HOME}/projects/go
 pathadd ${HOME}/gocode/bin:${HOME}/projects/go/bin
 
 export GPG_TTY=$(tty)
@@ -27,6 +27,7 @@ export GPG_TTY=$(tty)
 if [[ "$(uname)" == "Darwin" ]]; then
   export CLICOLOR=1
   export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+  #alias 
 else
   alias ls='ls --color=auto'
 fi
