@@ -35,11 +35,11 @@ class MakeNamespace(object):
 conf = None
 if 1 < len(sys.argv) and sys.argv[1] != "--list":
     try: 
-        conf = yaml.load(open(sys.argv[1],"r"))
+        conf = yaml.safe_load(open(sys.argv[1],"r"))
     except Exception:
         conf = json.loads(open(sys.argv[1],"r"))
 elif os.path.isfile("inventory-config.yml"):
-    conf = yaml.load(open("inventory-config.yml","r"))
+    conf = yaml.safe_load(open("inventory-config.yml","r"))
 elif os.path.isfile("inventory-config.json"): 
     conf = json.loads(open("inventory-config.json","r"))
 
@@ -53,8 +53,11 @@ ansible_inventory["_meta"] = { "hostvars": {} }
 aws_conf = conf.get('aws',None)
 if aws_conf is not None:
     import boto3
+    region = aws_conf.get("region",None)
+    profile = aws_conf.get("profile",None)
+    boto_session = boto3.session.Session(profile_name=profile)
     ec2_conf = conf['aws']['ec2'] 
-    ec2_client = boto3.client('ec2', region_name=aws_conf.get("region",None))
+    ec2_client = boto_session.client('ec2', region_name=region)
     instances = ec2_client.describe_instances(
             Filters = ec2_conf.get('filters',[]),
             )
@@ -143,7 +146,9 @@ if azure_conf is not None:
         ip_group, ip_name = ip_data[4], ip_data[-1]
         public_ip_resource = network_client.public_ip_addresses.get(ip_group,ip_name)
         public_ip = public_ip_resource.ip_address
-        public_dns = public_ip_resource.dns_settings.fqdn
+        public_dns = None
+        if public_ip_resource.dns_settings is not None:
+            public_dns = public_ip_resource.dns_settings.fqdn
 
         # Create facts
         host = public_ip
@@ -153,7 +158,7 @@ if azure_conf is not None:
             "name": name,
             "public_dns_name": public_dns,
             "public_ip": public_ip,
-            "private_dns_name": name,
+            "private_dns_name": machine.os_profile.computer_name, # Unfortunately not true :(
             "private_ip": private_ip,
             "tags": tag_map,
             "is_azure": True,
