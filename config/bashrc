@@ -71,7 +71,7 @@ export EDITOR=vim
 ssh() {
   # Do nothing if we are not inside tmux or ssh is called without arguments
   if [[ $# == 0 || -z $TMUX ]]; then
-    command ssh $@
+    command ssh "$@"
     return
   fi
   # The hostname is the last parameter (i.e. ${(P)#})
@@ -84,10 +84,18 @@ ssh() {
     renamed=1
     tmux rename-window $remote
   fi
-  command ssh $@
+  command ssh "$@"
   if [[ $renamed == 1 ]]; then
     tmux rename-window "$old_name"
   fi
+}
+
+pipenv_activate() {
+  . $(pipenv --venv)/bin/activate
+}
+
+cdgit() {
+  cd "$(git rev-parse --show-toplevel)"
 }
 
 # No history dups
@@ -96,6 +104,7 @@ export HISTCONTROL=ignoreboth:erasedups
 # Development
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
+export PIPENV_VENV_IN_PROJECT=1
 
 # Molokai theme
 #declare map0
