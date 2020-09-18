@@ -254,6 +254,8 @@ let g:ycm_confirm_extra_conf=0
 let g:ycm_goto_buffer_command = 'new-tab'
 set completeopt=menuone
 
+let g:rst_prefer_python_version = 'python3'
+
 " Shortcuts to plugins
 noremap <C-G> :YcmCompleter GoTo<cr>
 map <C-I> :pyf /usr/share/clang/clang-format.py<cr>

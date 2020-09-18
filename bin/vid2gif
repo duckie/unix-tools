@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+input=$1
+output=$2
+if [ -z "$output" ]; then
+  output="${input%.*}.gif"
+fi
+ffmpeg -i $1 -r 10 -f image2pipe -vcodec ppm - | convert -delay 10 -loop 0 - $output
