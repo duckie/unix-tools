@@ -68,3 +68,5 @@ aws ce get-cost-and-usage --time-period Start=2019-01-01,End=2019-11-01 --granul
 socat UNIX-LISTEN:/var/run/dtkdevadm-github.sock,umask=077,user=dtkdevadm,fork "UNIX:$SSH_AUTH_SOCK"
 
 LANG=C.utf8 find /usr/lib/python3.6/site-packages/ -exec rpm -qf {} \; | grep "is not owned by any package"
+
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt

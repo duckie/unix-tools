@@ -120,6 +120,9 @@ sshuttle2() {
   sshuttle -r "$1" $(ssh -G "$1" | awk '$1 == "hostname" { print $2 }')
 }
 
+list_all_from_cidr() {
+  nmap -n -sL "$1"| awk '/Nmap scan report/{print $NF}'
+}
 
 # No history dups
 export HISTCONTROL=ignoreboth:erasedups
