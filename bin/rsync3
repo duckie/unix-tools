@@ -35,4 +35,4 @@ target_host="${parsed_target_host_spec[1]}"
 #echo $target_host
 #echo $target_dir
 
-ssh -A -R "localhost:$remote_port:$target_host:22" "$source_host_spec" "sudo -E rsync -e 'ssh -p $remote_port -o StrictHostKeyChecking=no' $(printf "'%s' " "${rsync_args[@]}") '$source_dir' '$target_login@localhost:$target_dir'"
+ssh -A -R "localhost:$remote_port:$target_host:22" "$source_host_spec" "sudo -E rsync -e 'ssh -p $remote_port -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' $(printf "'%s' " "${rsync_args[@]}") '$source_dir' '$target_login@localhost:$target_dir'"
