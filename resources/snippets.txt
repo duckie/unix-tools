@@ -7,9 +7,9 @@ tcpdump -i any -w /tmp/dump.root tcp port 443 or tcp port 13456
 lsof -p 24736 -a -i -P |grep LISTEN:w
 
 set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab smartindent
+# vi:ts=8:sts=0:et:sw=2:smarttab:si
 
 aws ec2 describe-images  --owners 898082745236 --filters Name=name,Values='Deep Learning AMI (Amazon Linux) Version*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &Name)[-1].ImageId'   --output text --region eu-west-3
-
 aws ec2 describe-images --owners 679593333241 --filters Name=name,Values='CentOS Linux 7 x86_64 HVM EBS*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &CreationDate)[-1].ImageId'   --output text --region eu-west-3
 aws ec2 describe-images --owners 898082745236 --filters Name=name,Values='Deep Learning AMI (Amazon Linux) Version*' Name=architecture,Values=x86_64 Name=root-device-type,Values=ebs --query 'sort_by(Images, &CreationDate)[-1].ImageId'   --output text --region eu-west-3
 aws ec2 describe-images --owners aws-marketplace --filters ‘Name=name,Values=dataiku-dss-6.0.1-*’ --query ‘Images[].ImageId’ --output text
@@ -19,7 +19,6 @@ nvidia-smi --format=csv --query-gpu=uuid,name,index,utilization.gpu,memory.total
 curl https://ipinfo.io/ip
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
-
 
 openssl passwd -salt <salt> -1 <plaintext>
 
@@ -67,6 +66,13 @@ aws ce get-cost-and-usage --time-period Start=2019-01-01,End=2019-11-01 --granul
 
 socat UNIX-LISTEN:/var/run/dtkdevadm-github.sock,umask=077,user=dtkdevadm,fork "UNIX:$SSH_AUTH_SOCK"
 
+
 LANG=C.utf8 find /usr/lib/python3.6/site-packages/ -exec rpm -qf {} \; | grep "is not owned by any package"
 
+# Self signed cert
 openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
+ 
+# Qemu run ISO from remote shell
+apt-get install qemu-kvm
+curl -O http://centos.mirrors.proxad.net/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-boot.iso
+qemu-system-x86_64 -netdev type=user,id=mynet0 -device virtio-net-pci,netdev=mynet0 -m 2048 -localtime -enable-kvm -drive index=0,media=disk,if=virtio,file=/dev/sda -vga qxl -vnc :0 -daemonize -cdrom /tmp/CentOS-8.2.2004-x86_64-boot.iso -boot d
