@@ -1,0 +1,38 @@
+#!/bin/bash
+
+remote_port=54321
+source_arg=
+target_arg=
+args=("$@")
+
+## Extract args
+slice_size=$(($#-2))
+rsync_args=("${args[@]:0:$slice_size}")
+source_index=$(($#-2))
+source_arg="${args[$source_index]}"
+target_index=$(($#-1))
+target_arg="${args[$target_index]}"
+
+# Parse source
+IFS=':'; parsed_source=($source_arg); unset IFS;
+source_host_spec="${parsed_source[0]}"
+source_dir="${parsed_source[1]}"
+
+# Parse target
+IFS=':'; parsed_target=($target_arg); unset IFS;
+target_host_spec="${parsed_target[0]}"
+target_dir="${parsed_target[1]}"
+IFS='@'; parsed_target_host_spec=($target_host_spec); unset IFS
+target_login="${parsed_target_host_spec[0]}"
+target_host="${parsed_target_host_spec[1]}"
+#ssh_solved_target_host=$(ssh -G "$target_host" | awk '$1 == "hostname" { print $2 }')
+
+# Debug
+#echo "${rsync_args[@]}"
+#echo $source_host_spec
+#echo $source_dir
+#echo $target_login
+#echo $target_host
+#echo $target_dir
+
+ssh -A "$source_host_spec" "sudo -E rsync -e 'ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null' $(printf "'%s' " "${rsync_args[@]}") '$source_dir' '$target_arg'"

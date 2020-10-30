@@ -1,0 +1,3 @@
+#!/usr/bin/env python
+import json, sys, jmespath;
+print(jmespath.search(sys.argv[1],json.load(sys.stdin)));
