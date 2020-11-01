@@ -26,8 +26,8 @@ insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 insert_once "source ${CONFPATH}/gdbinit" ${HOME}/.gdbinit
 git config --global include.path .tools/config/gitconfig
 
-rsync -qavz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
-rsync -qavz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
+#rsync -qavz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
+#rsync -qavz "${CONFPATH}/irssi/default.theme" "${HOME}/.irssi/default.theme"
 rsync -qavz ${RSCPATH}/vim/.vim ${HOME}/
 mkdir -p ${HOME}/projects/go
 
