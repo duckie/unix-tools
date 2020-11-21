@@ -8,6 +8,8 @@
 # To get a config file with the same key positions, but for your current
 # layout, use the i3-config-wizard
 #
+set_from_resource $x11_dpi Xft.dpi 100
+set_from_resource $rofi_dpi i3wm.rofi_dpi 100
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
@@ -51,11 +53,13 @@ floating_modifier Mod1
 bindsym $mod+Return exec env -u SESSION_MANAGER xterm
 
 # kill focused window
-bindsym $mod+Shift+q kill
+bindsym $mod+q kill
+bindsym $mod+c exec "xsel -po|xsel -bi"
+bindsym --release $mod+v exec --no-startup-id xte "key XF86Paste"
 
 # start dmenu (a program launcher)
 #bindsym Mod1+d exec dmenu_run
-bindsym $mod+d exec rofi -dpi 192 -show run
+bindsym $mod+d exec rofi -dpi $rofi_dpi -show run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -89,7 +93,8 @@ bindsym $mod+Shift+Right move right
 bindsym $mod+h split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+# bindsym $mod+v split v
+bindsym $mod+| split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
