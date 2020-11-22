@@ -1,0 +1,8 @@
+super + c
+  xsel -po|xsel -bi
+
+@super + v
+  xdotool key --clearmodifiers Shift_L+Insert
+
+@super + a
+  xdotool key --clearmodifiers Control_L+a

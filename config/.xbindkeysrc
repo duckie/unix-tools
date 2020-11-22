@@ -1,0 +1,8 @@
+"xsel -po|xsel -bi"
+  Mod4+c
+
+"xdotool key --clearmodifiers Shift_L+Insert"
+  Release+Mod4+v
+
+"xdotool key --clearmodifiers Control_L+a"
+  Release+Mod4+a
