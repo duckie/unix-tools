@@ -2,7 +2,6 @@
 [[ $- != *i* ]] && return
 
 pathadd() {
-  #echo $1 | tr -s ":" "\n" | while read dir; do 
   while read dir; do 
     if [ -d "$dir" ] && [[ ":$PATH:" != *":$dir:"* ]]; then
       PATH="${PATH:+"$PATH:"}$dir"
@@ -10,12 +9,20 @@ pathadd() {
   done< <(echo $1 | tr -s ":" "\n")
 }
 
+pathprepend() {
+  while read dir; do 
+    if [ -d "$dir" ] && [[ ":$PATH:" != *":$dir:"* ]]; then
+      PATH="$dir:${PATH}"
+    fi
+  done< <(echo $1 | tr -s ":" "\n")
+}
+
 SCRIPTPATH="$( cd "$(dirname "$BASH_SOURCE")" ; pwd -P )"
 TOOLS_BIN_PATH=$(dirname "${SCRIPTPATH}")/bin
-pathadd ${TOOLS_BIN_PATH}
+pathprepend ${TOOLS_BIN_PATH}
 
 if [ -d ${HOME}/bin ]; then
-  pathadd ${HOME}/bin
+  pathprepend ${HOME}/bin
 fi
 
 export GOPATH=${HOME}/projects/go

@@ -43,3 +43,28 @@ else
   echo "Cpp prompt exe already installed."
 fi
 
+# Install WM confs
+if [ ! -f "$HOME/.gtkrc-2.0" ]; then
+  cp "${CONFPATH}/.gtkrc-2.0" "$HOME/"
+fi
+mkdir -p ~/.config/gtk-3.0
+if [ ! -f "$HOME/.config/gtk-3.0" ]; then
+  cp "${CONFPATH}/gtk-3.0/settings.ini" "$HOME/.config/gtk-3.0/"
+fi
+
+mkdir -p ~/.config/i3
+if [ ! -L ~/.config/i3/config ]; then
+  ln -s "${CONFPATH}/i3/config" ~/.config/i3/
+fi
+mkdir -p ~/.config/polybar
+if [ ! -L ~/.config/polybar/config ]; then
+  ln -s "${CONFPATH}/polybar/config" ~/.config/polybar/
+  ln -s "${CONFPATH}/polybar/launch.sh" ~/.config/polybar/
+fi
+if [ ! -f ~/.config/polybar/variables.sh ]; then
+  cat >~/.config/polybar/variables.sh <<EOF
+POLYBAR_DPI="150"
+POLYBAR_HEIGTH="2%"
+EOF
+fi
+

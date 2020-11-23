@@ -1,8 +1,15 @@
 "xsel -po|xsel -bi"
   Mod4+c
 
-"xdotool key --clearmodifiers Shift_L+Insert"
+"~/.tools/bin/x11-utils/cut_in_focused_window"
+  Release+Mod4+x
+
+"~/.tools/bin/x11-utils/paste_in_focused_window"
   Release+Mod4+v
 
 "xdotool key --clearmodifiers Control_L+a"
   Release+Mod4+a
+
+"~/.tools/bin/x11-utils/search_in_focused_window"
+  Release+Mod4+f
+

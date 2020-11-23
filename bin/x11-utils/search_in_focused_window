@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#focused_window_id=$(xdotool getwindowfocus)
+active_window_id=$(xdotool getactivewindow)
+active_window_pid=$(xdotool getwindowpid "$active_window_id")
+process=$(cat /proc/$active_window_pid/comm)
+echo "Process $process found"
+if [[ "$process" == "firefox" || "$process" == "chromium" ]]; then
+  xdotool key --clearmodifiers Control_L+f
+elif [[ "$process" == "xterm" ]]; then
+  # Here we make the assumption tmux is opened, if not, well, too bad
+  xdotool key --clearmodifiers Control_L+a
+  xdotool type --delay 0 "[?"
+fi
