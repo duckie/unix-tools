@@ -57,7 +57,7 @@ font-0 = fixed:pixelsize=10;1
 font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-2 = siji:pixelsize=10;1
 font-3 = FontAwesome:style=Regular
-font-4 = "Material Design Icons:style=Regular:1"
+font-4 = "Material Design Icons:style=Regular"
 #font-0 = "Font Awesome 5 Free,Font Awesome 5 Free Regular:style=Regular"
 #font-1 = "Font Awesome 5 Free,Font Awesome 5 Free Regular:style=Regular"
 #font-2 = "Font Awesome 5 Free,Font Awesome 5 Free Regular:style=Regular"
@@ -96,12 +96,10 @@ label = %title:0:30:...%
 type = internal/xkeyboard
 blacklist-0 = num lock
 
-format-prefix = " "
+format-prefix = "󰌌 "
 format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.secondary}
 
 label-layout = %layout%
-label-layout-underline = ${colors.secondary}
 
 label-indicator-padding = 2
 label-indicator-margin = 1
@@ -114,6 +112,8 @@ interval = 25
 
 mount-0 = /
 
+format-mounted-prefix="󰋊 "
+format-mounted-prefix-foreground=${colors.foreground-alt}
 label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
 label-unmounted = %mountpoint% not mounted
 label-unmounted-foreground = ${colors.foreground-alt}
@@ -194,20 +194,20 @@ card = intel_backlight
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-underline = #f90000
 label = %percentage:2%%
-format="<ramp-load> <label>"
+format="%{F#555}<ramp-load>%{F-}<label>"
 
 ramp-load-0 = "󰾆"
 ramp-load-1 = "󰾅"
-ramp-load-2 = "󰓅"
+ramp-load-2 = "󰾅"
+ramp-load-3 = "󰓅"
+ramp-load-4 = "󰓅"
 
 [module/memory]
 type = internal/memory
 interval = 2
 format-prefix = "󰍛 "
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #4bffdc
 label = "%percentage_used%%"
 
 
@@ -236,10 +236,9 @@ ramp-signal-foreground = ${colors.foreground-alt}
 [module/eth]
 type = internal/network
 interface = ${env:POLYBAR_ETHERNET_INTERFACE}
-interval = 3.0
+interval = 5.0
 
-format-connected-underline = #55aa55
-format-connected-prefix = " "
+format-connected-prefix = "󰛳"
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
 
@@ -259,9 +258,8 @@ date-alt = " %Y-%m-%d"
 time = %H:%M
 time-alt = %H:%M:%S
 
-format-prefix = 
+format-prefix = "󰥔"
 format-prefix-foreground = ${colors.foreground-alt}
-format-underline = #0a6cf5
 
 label = %date% %time%
 
@@ -371,17 +369,24 @@ thermal-zone = 0
 warn-temperature = 60
 
 format = <ramp> <label>
-format-underline = #f50a4d
 format-warn = <ramp> <label-warn>
-format-warn-underline = ${self.format-underline}
+format-warn-underline = #f50a4d
 
 label = %temperature-c%
 label-warn = %temperature-c%
 label-warn-foreground = ${colors.secondary}
 
-ramp-0 = 
-ramp-1 = 
-ramp-2 = 
+ramp-0=󱃃
+ramp-1=󱃃
+ramp-2=󱃃
+ramp-3=󱃃
+ramp-4=󱃃
+ramp-5=󱃃
+ramp-6=󱃃
+ramp-7=󱃃
+ramp-8=󱃃
+ramp-9=󱃃
+ramp-10=󰸁
 ramp-foreground = ${colors.foreground-alt}
 
 [module/powermenu]
@@ -391,8 +396,8 @@ expand-right = true
 
 format-spacing = 1
 
-label-open = 
-label-open-foreground = ${colors.secondary}
+label-open = 󰐥
+label-open-foreground = ${colors.foreground-alt}
 label-close =  cancel
 label-close-foreground = ${colors.secondary}
 label-separator = |
