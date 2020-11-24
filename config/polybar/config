@@ -213,24 +213,21 @@ label = "%percentage_used%%"
 
 [module/wlan]
 type = internal/network
-interface = wlp1s0
+interface = ${env:POLYBAR_WLAN_INTERFACE}
 interval = 3.0
-
 format-connected = <ramp-signal> <label-connected>
-format-connected-underline = #9f78e1
 label-connected = %essid%
-
-format-disconnected =
+format-disconnected = 󰤮
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = %ifname% disconnected
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
+ramp-signal-0 = 󰤯
+ramp-signal-1 = 󰤟
+ramp-signal-2 = 󰤢
+ramp-signal-3 = 󰤥
+ramp-signal-4 = 󰤨
 ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/eth]
@@ -285,81 +282,38 @@ ramp-volume-4 = "󰕾"
 ramp-volume-5 = "󰕾"
 ramp-volume-6 = "󰕾"
 
-bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
-bar-volume-foreground-5 = #f5a70a
-bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
-bar-volume-indicator = |
-bar-volume-indicator-font = 2
-bar-volume-fill = ─
-bar-volume-fill-font = 2
-bar-volume-empty = ─
-bar-volume-empty-font = 2
-bar-volume-empty-foreground = ${colors.foreground-alt}
-
-[module/alsa]
-type = internal/alsa
-
-format-volume = <label-volume> <bar-volume>
-label-volume = VOL
-label-volume-foreground = ${root.foreground}
-
-format-muted-prefix = " "
-format-muted-foreground = ${colors.foreground-alt}
-label-muted = sound muted
-
-bar-volume-width = 10
-bar-volume-foreground-0 = #55aa55
-bar-volume-foreground-1 = #55aa55
-bar-volume-foreground-2 = #55aa55
-bar-volume-foreground-3 = #55aa55
-bar-volume-foreground-4 = #55aa55
-bar-volume-foreground-5 = #f5a70a
-bar-volume-foreground-6 = #ff5555
-bar-volume-gradient = false
-bar-volume-indicator = |
-bar-volume-indicator-font = 2
-bar-volume-fill = ─
-bar-volume-fill-font = 2
-bar-volume-empty = ─
-bar-volume-empty-font = 2
-bar-volume-empty-foreground = ${colors.foreground-alt}
-
 [module/battery]
 type = internal/battery
 battery = BAT1
 adapter = ADP1
 full-at = 98
-
-format-charging = <animation-charging> <label-charging>
-format-charging-underline = #ffb52a
-
-format-discharging = <animation-discharging> <label-discharging>
-format-discharging-underline = ${self.format-charging-underline}
-
-format-full-prefix = " "
+format-charging = 󱐋 <ramp-capacity> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
+format-full = 󰁹 <label-full>
 format-full-prefix-foreground = ${colors.foreground-alt}
-format-full-underline = ${self.format-charging-underline}
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-foreground = ${colors.foreground-alt}
+ramp-capacity-0 =󱃍
+ramp-capacity-1 =󰁺
+ramp-capacity-2 =󰁻
+ramp-capacity-3 =󰁼
+ramp-capacity-4 =󰁽
+ramp-capacity-5 =󰁿
+ramp-capacity-6 =󰁿
+ramp-capacity-7 =󰂀
+ramp-capacity-8 =󰂁
+ramp-capacity-9 =󰂂
+ramp-capacity-foreground = ${colors.foreground}
+#format-warn-underline = #f50a4d
 
-animation-charging-0 = 
-animation-charging-1 = 
-animation-charging-2 = 
+animation-charging-0 =
+animation-charging-1 =
+animation-charging-2 =
 animation-charging-foreground = ${colors.foreground-alt}
 animation-charging-framerate = 750
 
-animation-discharging-0 = 
-animation-discharging-1 = 
-animation-discharging-2 = 
+animation-discharging-0 =
+animation-discharging-1 =
+animation-discharging-2 =
 animation-discharging-foreground = ${colors.foreground-alt}
 animation-discharging-framerate = 750
 
@@ -376,16 +330,16 @@ label = %temperature-c%
 label-warn = %temperature-c%
 label-warn-foreground = ${colors.secondary}
 
-ramp-0=󱃃
-ramp-1=󱃃
-ramp-2=󱃃
-ramp-3=󱃃
-ramp-4=󱃃
-ramp-5=󱃃
-ramp-6=󱃃
-ramp-7=󱃃
-ramp-8=󱃃
-ramp-9=󱃃
+ramp-0=󱃃
+ramp-1=󱃃
+ramp-2=󱃃
+ramp-3=󱃃
+ramp-4=󱃃
+ramp-5=󱃃
+ramp-6=󱃃
+ramp-7=󱃃
+ramp-8=󱃃
+ramp-9=󱃃
 ramp-10=󰸁
 ramp-foreground = ${colors.foreground-alt}
 
@@ -396,7 +350,7 @@ expand-right = true
 
 format-spacing = 1
 
-label-open = 󰐥
+label-open = 󰐥
 label-open-foreground = ${colors.foreground-alt}
 label-close =  cancel
 label-close-foreground = ${colors.secondary}
