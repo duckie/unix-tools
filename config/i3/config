@@ -57,7 +57,7 @@ bindsym --release XF86PowerOff exec --no-startup-id betterlockscreen -s
 floating_modifier Mod1
 
 # start a terminal
-bindsym $mod+Return exec env -u SESSION_MANAGER xterm
+bindsym $mod+Return exec --no-startup-id env -u SESSION_MANAGER xterm
 
 # kill focused window
 bindsym $mod+q kill
@@ -70,7 +70,7 @@ bindsym $mod+d exec --no-startup-id ~/bin/rofi -dpi $rofi_dpi -show run
 
 #bindsym Mod1+Tab exec "/home/canard/projects/dku-automation/rofi/build/rofi -show window -kb-cancel 'Alt+Escape,Escape' -kb-accept-entry '!Alt-Tab,!Alt+Alt_L' -kb-row-down 'Alt+Tab,Alt+Down' -kb-row-up 'Alt+Shift+Tab,Alt+Up' -selected-row 1"
 # Requires PR from wip/alt-tab-hacks
-bindsym $mod+Tab exec --no-startup-id "~/bin/rofi -show window -kb-cancel 'Super+Escape,Escape' -kb-accept-entry '!Super-Tab,!Super+Super_L' -kb-row-down 'Super+Tab,Super+Down' -kb-row-up 'Super+Shift+Tab,Super+Up' -selected-row 1"
+bindsym $mod+Tab exec --no-startup-id "~/bin/rofi -dpi $rofi_dpi -show window -kb-cancel 'Super+Escape,Escape' -kb-accept-entry '!Super-Tab,!Super+Super_L' -kb-row-down 'Super+Tab,Super+Down' -kb-row-up 'Super+Shift+Tab,Super+Up' -selected-row 1"
 
 # change focus
 bindsym $mod1+$left focus left
