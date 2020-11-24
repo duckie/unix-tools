@@ -1,3 +1,4 @@
-[submodule "external/vim/vundle"]
-	path = external/vim/vundle
-	url = https://github.com/VundleVim/Vundle.vim.git
+[submodule "vim-plug"]
+	path = external/vim/vim-plug/autoload
+	url = https://github.com/junegunn/vim-plug.git
+	branch = master

@@ -4,12 +4,16 @@ filetype off
 autocmd!
 
 " Initilialize Vundle
-set rtp+=~/.tools/external/vim/vundle
-call vundle#begin()
-Plugin 'tpope/vim-surround'
-Plugin 'ycm-core/YouCompleteMe'
-" Plugin 'christoomey/vim-tmux-navigator'
-call vundle#end()
+set rtp+=~/.tools/external/vim/vim-plug
+" call vundle#begin()
+" Plugin 'tpope/vim-surround'
+" Plugin 'ycm-core/YouCompleteMe'
+" " Plugin 'christoomey/vim-tmux-navigator'
+" call vundle#end()
+call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-surround'
+Plug 'ycm-core/YouCompleteMe'
+call plug#end()
 
 filetype plugin indent on
 filetype on
