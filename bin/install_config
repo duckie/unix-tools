@@ -44,6 +44,7 @@ else
 fi
 
 # Install WM confs
+echo "Link gtk"
 if [ ! -f "$HOME/.gtkrc-2.0" ]; then
   cp "${CONFPATH}/.gtkrc-2.0" "$HOME/"
 fi
@@ -52,10 +53,13 @@ if [ ! -f "$HOME/.config/gtk-3.0" ]; then
   cp "${CONFPATH}/gtk-3.0/settings.ini" "$HOME/.config/gtk-3.0/"
 fi
 
+echo "Link i3"
 mkdir -p ~/.config/i3
 if [ ! -L ~/.config/i3/config ]; then
   ln -s "${CONFPATH}/i3/config" ~/.config/i3/
 fi
+
+echo "Link polybar"
 mkdir -p ~/.config/polybar
 if [ ! -L ~/.config/polybar/config ]; then
   ln -s "${CONFPATH}/polybar/config" ~/.config/polybar/
@@ -68,3 +72,8 @@ POLYBAR_HEIGTH="2%"
 EOF
 fi
 
+echo "Link dunst"
+mkdir -p ~/.config/dunst
+if [ ! -L ~/.config/dunst/dunstrc ]; then
+  ln -s "${CONFPATH}/dunst/dunstrc" ~/.config/dunst/
+fi
