@@ -7,7 +7,7 @@
 "~/.tools/bin/x11-utils/paste_in_focused_window"
   Release+Mod4+v
 
-"xdotool key --clearmodifiers Control_L+a"
+"~/.tools/bin/x11-utils/selectall_in_focused_window"
   Release+Mod4+a
 
 "~/.tools/bin/x11-utils/search_in_focused_window"

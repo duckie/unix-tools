@@ -1,12 +1,15 @@
 #!/bin/bash
 
 #focused_window_id=$(xdotool getwindowfocus)
-active_window_id=$(xdotool getactivewindow)
+#active_window_id=$(xdotool getactivewindow)
+active_window_id=$(xdotool getwindowfocus)
 active_window_pid=$(xdotool getwindowpid "$active_window_id")
 process=$(cat /proc/$active_window_pid/comm)
 echo "Process $process found"
 if [[ "$process" == "xterm" ]]; then
+  xdotool keyup Super_L
   xdotool key Control_L+Shift_L+v
 else
+  xdotool keyup Super_L
   xdotool key --clearmodifiers Control_L+v
 fi
