@@ -61,12 +61,9 @@ bindsym $mod+Return exec --no-startup-id env -u SESSION_MANAGER xterm
 
 # kill focused window
 bindsym $mod+q kill
-#bindsym $mod+c exec "xsel -po|xsel -bi"
-#bindsym --release $mod+v exec --no-startup-id xte "key XF86Paste"
 
 # start dmenu (a program launcher)
-#bindsym Mod1+d exec dmenu_run
-bindsym $mod+d exec --no-startup-id ~/bin/rofi -dpi $rofi_dpi -show run
+bindsym $mod+space exec --no-startup-id ~/bin/rofi -dpi $rofi_dpi -show run
 
 #bindsym Mod1+Tab exec "/home/canard/projects/dku-automation/rofi/build/rofi -show window -kb-cancel 'Alt+Escape,Escape' -kb-accept-entry '!Alt-Tab,!Alt+Alt_L' -kb-row-down 'Alt+Tab,Alt+Down' -kb-row-up 'Alt+Shift+Tab,Alt+Up' -selected-row 1"
 # Requires PR from wip/alt-tab-hacks
@@ -104,7 +101,7 @@ bindsym $mod+h split h
 bindsym $mod+j split v
 
 # enter fullscreen mode for the focused container
-#bindsym $mod+f fullscreen toggle
+bindsym $mod+Shift+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 #bindsym $mod+s layout stacking
@@ -115,7 +112,7 @@ bindsym $mod+s layout toggle split
 bindsym $mod+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+#bindsym $mod+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+p focus parent
