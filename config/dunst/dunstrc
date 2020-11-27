@@ -1,3 +1,5 @@
+# Reference: https://github.com/dunst-project/dunst/blob/master/dunstrc 
+
 [global]
     font = Noto Sans Mono
 
@@ -122,6 +124,11 @@
 
     # browser for opening urls in context menu
     browser = /usr/bin/firefox -new-tab
+
+		# Mouse clicks
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
 
 [frame]
     width = 5
