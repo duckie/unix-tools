@@ -1,39 +1,42 @@
 ! Molokai theme
-*xterm*background: #101010
-*xterm*foreground: #d0d0d0
-*xterm*cursorcolor: #d0d0d0
-*xterm*color0: #101010
-*xterm*color1: #960050
-*xterm*color2: #66aa11
-*xterm*color3: #c47f2c
-*xterm*color4: #30309b
-*xterm*color5: #7e40a5
-*xterm*color6: #3579a8
-*xterm*color7: #9999aa
-*xterm*color8: #303030
-*xterm*color9: #ff0090
-*xterm*color10: #80ff00
-*xterm*color11: #ffba68
-*xterm*color12: #5f5fee
-*xterm*color13: #bb88dd
-*xterm*color14: #4eb4fa
-*xterm*color15: #d0d0d0
+XTerm.vt100.background: #101010
+XTerm.vt100.foreground: #d0d0d0
+XTerm.vt100.cursorcolor: #d0d0d0
+XTerm.vt100.color0: #101010
+XTerm.vt100.color1: #960050
+XTerm.vt100.color2: #66aa11
+XTerm.vt100.color3: #c47f2c
+XTerm.vt100.color4: #30309b
+XTerm.vt100.color5: #7e40a5
+XTerm.vt100.color6: #3579a8
+XTerm.vt100.color7: #9999aa
+XTerm.vt100.color8: #303030
+XTerm.vt100.color9: #ff0090
+XTerm.vt100.color10: #80ff00
+XTerm.vt100.color11: #ffba68
+XTerm.vt100.color12: #5f5fee
+XTerm.vt100.color13: #bb88dd
+XTerm.vt100.color14: #4eb4fa
+XTerm.vt100.color15: #d0d0d0
 
 ! xterm*facename: inconsolata sans mono:size=40:antialias=true
-XTerm*faceName: Noto Sans Mono:size=10:antialias=true
+XTerm.vt100.faceName: Fira Code:size=10:antialias=true
+!XTerm.vt100.faceName: Noto Sans Mono:size=10:antialias=true
 ! xterm*facename: xft:inconsolata-dz for powerline
 ! xterm*facename: dejavu sans:size=10
 ! xterm*facesize: 40
 ! xterm*font: -misc-dejavu sans-medium-r-normal--0-0-0-0-p-0-iso10646-1
-XTerm*utf8: 1
-XTerm*locale: true
+XTerm.utf8: 1
+XTerm.locale: true
 ! xterm*facename: -misc-inconsolata-medium-r-normal--0-0-0-0-p-0-iso10646-1
-XTerm*vt100.translations: #override \
+XTerm.vt100.translations: #override \
     Shift Ctrl <Key> C: copy-selection(CLIPBOARD) \n\
     Shift Ctrl <Key> V: insert-selection(CLIPBOARD)
 
-XTerm*vt100.cutnewline: false
-XTerm*vt100.cuttobeginningofline: false
-XTerm*vt100.charclass: 33:48,35:48,37:48,42:48,45-47:48,64:48,95:48,126:48
+XTerm.vt100.cutnewline: false
+XTerm.vt100.cuttobeginningofline: false
+XTerm.vt100.charclass: 33:48,35:48,37:48,42:48,45-47:48,64:48,95:48,126:48
 
-Xft.dpi: 192
+Xft.dpi: 125
+i3wm.rofi_dpi: 125
+i3wm.polybar_dpi: 200
