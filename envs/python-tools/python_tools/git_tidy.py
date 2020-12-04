@@ -55,18 +55,20 @@ def trim_local_merged():
             execute_command(["git","branch","-d",branch])
             print("{} deleted".format(branch))
 
+def main():
+    # Parse commad line
+    parser = argparse.ArgumentParser(description="Tools to clean a shared git repository")
+    #parser.add_argument("version", nargs=1, help="Version of the packages")
+    parser.add_argument("--list-merged-tips", action="store_true", help="List data about branch tips already merged")
+    parser.add_argument("--trim-local-merged", action="store_true", help="Remove local branches already merged into current branch")
+    args = parser.parse_args()
 
+    if args.list_merged_tips:
+      fetch()
+      list_merged()
 
-# Parse commad line
-parser = argparse.ArgumentParser(description="Tools to clean a shared git repository")
-#parser.add_argument("version", nargs=1, help="Version of the packages")
-parser.add_argument("--list-merged-tips", action="store_true", help="List data about branch tips already merged")
-parser.add_argument("--trim-local-merged", action="store_true", help="Remove local branches already merged into current branch")
-args = parser.parse_args()
+    if args.trim_local_merged:
+        trim_local_merged()
 
-if args.list_merged_tips:
-  fetch()
-  list_merged()
-
-if args.trim_local_merged:
-    trim_local_merged()
+if __name__ == "__main__":
+    main()

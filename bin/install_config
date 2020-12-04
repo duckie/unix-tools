@@ -21,9 +21,11 @@ insert_once() {
 }
 
 insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
+insert_once "source ${CONFPATH}/zshrc" ${HOME}/.zshrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 insert_once "source ${CONFPATH}/gdbinit" ${HOME}/.gdbinit
+insert_once "set editing-mode vi" ${HOME}/.inputrc
 git config --global include.path .tools/config/gitconfig
 
 #rsync -qavz "${CONFPATH}/irssi/config" "${HOME}/.irssi/config"
@@ -41,6 +43,27 @@ if [ ! -f "${BINPATH}/cppprompt" ]; then
   rm -r "${ROOTPATH}/cppprompt/build"
 else
   echo "Cpp prompt exe already installed."
+fi
+
+# Install pyenv
+if [ ! -f "${BINPATH}/.pyenv" ]; then
+  # Package
+  cd "${ROOTPATH}/envs/python-tools"
+  poetry build -f sdist
+  cd -
+
+  # Install
+  python3 -m venv "${BINPATH}/.pyenv"
+  source "${BINPATH}/.pyenv/bin/activate"
+  pip install pip --upgrade
+  pip install "${ROOTPATH}/envs/python-tools/dist/python-tools-0.1.0.tar.gz"
+  deactivate
+fi
+
+# Install antigen
+mkdir -p "$HOME/bin"
+if [ ! -f "${HOME}/bin/antigen.zsh" ]; then
+  curl -L git.io/antigen > "${HOME}/bin/antigen.zsh"
 fi
 
 # Install WM confs

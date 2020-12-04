@@ -1,3 +1,1 @@
-#!/usr/bin/env python
-import ast, json, sys; 
-print(json.dumps(ast.literal_eval(sys.stdin.read()),indent=2))
+.pyenv/bin/pydict2json

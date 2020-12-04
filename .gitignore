@@ -1,4 +1,6 @@
 /bin/cppprompt
-/bin/pyenv
+/bin/.pyenv
 /cppprompt/build/*
+/envs/python-tools/dist
 /build/*
+*.zwc

@@ -5,11 +5,6 @@ autocmd!
 
 " Initilialize Vundle
 set rtp+=~/.tools/external/vim/vim-plug
-" call vundle#begin()
-" Plugin 'tpope/vim-surround'
-" Plugin 'ycm-core/YouCompleteMe'
-" " Plugin 'christoomey/vim-tmux-navigator'
-" call vundle#end()
 call plug#begin('~/.vim/plugged')
 Plug 'tpope/vim-surround'
 Plug 'ycm-core/YouCompleteMe'
