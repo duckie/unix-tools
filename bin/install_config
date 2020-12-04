@@ -33,20 +33,21 @@ git config --global include.path .tools/config/gitconfig
 rsync -qavz ${RSCPATH}/vim/.vim ${HOME}/
 mkdir -p ${HOME}/projects/go
 
-if [ ! -f "${BINPATH}/cppprompt" ]; then
+if [[ (! -f "${BINPATH}/cppprompt") || (! -f "${BINPATH}/abbreviate_full_path") ]]; then
   mkdir -p "${ROOTPATH}/cppprompt/build"
   cd "${ROOTPATH}/cppprompt/build"
   cmake ../ -DCMAKE_BUILD_TYPE=Release
   make
   mv cppprompt "${BINPATH}/"
+  mv abbreviate_full_path "${BINPATH}/"
   cd "${CURRENTPATH}"
   rm -r "${ROOTPATH}/cppprompt/build"
 else
-  echo "Cpp prompt exe already installed."
+  echo "Cpp prompt tools already installed."
 fi
 
 # Install pyenv
-if [ ! -f "${BINPATH}/.pyenv" ]; then
+if [ ! -d "${BINPATH}/.pyenv" ]; then
   # Package
   cd "${ROOTPATH}/envs/python-tools"
   poetry build -f sdist

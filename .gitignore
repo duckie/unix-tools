@@ -1,4 +1,5 @@
 /bin/cppprompt
+/bin/abbreviate_full_path
 /bin/.pyenv
 /cppprompt/build/*
 /envs/python-tools/dist

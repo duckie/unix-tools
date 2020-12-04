@@ -45,6 +45,14 @@ compinit
 # Custom prompt, need to have cppprompt compiled
 autoload -U colors && colors
 setopt PROMPT_SUBST
+function path_prompt(){
+  if type abbreviate_full_path >/dev/null; then
+    abbreviate_full_path $(pwd) 30
+  else
+    echo '/%1d'
+  fi
+  [[ -n "$venv" ]] && echo -n "($venv) "
+}
 function virtualenv_prompt(){
   if [[ -n "$VIRTUAL_ENV" ]]; then
     venv="${VIRTUAL_ENV##*/}"
@@ -54,7 +62,8 @@ function virtualenv_prompt(){
   [[ -n "$venv" ]] && echo -n "($venv) "
 }
 
-RPS1='%{%F{1}%}/%1d %{%F{5}%}$(virtualenv_prompt)%{%F{default}%} '
+#RPS1='%{%F{1}%}/%1d %{%F{5}%}$(virtualenv_prompt)%{%F{default}%} '
+RPS1='%{%F{1}%}$(path_prompt) %{%F{5}%}$(virtualenv_prompt)%{%F{default}%} '
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 #if [[ -n "${TMUX:-}" ]]; then
   PS1='%{%F{1}%}%#%{%F{default}%} '
