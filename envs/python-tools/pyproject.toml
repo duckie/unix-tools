@@ -10,19 +10,20 @@ fonttools = "^4.17.1"
 PyYAML = "^5.3.1"
 
 [tool.poetry.scripts]
-yaml2json = "python_tools.yaml2json:main"
-clean_ssh_known_hosts = "python_tools.clean_ssh_known_hosts:main"
-mail2login = "python_tools.mail2login:main"
+ansibleinventory2sshconfig = "python_tools.ansibleinventory2sshconfig:main"
 boost2camel = "python_tools.boost2camel:main"
 camel2boost = "python_tools.camel2boost:main"
+clean_ssh_known_hosts = "python_tools.clean_ssh_known_hosts:main"
 cloud_tagged_inventory = "python_tools.cloud_tagged_inventory:main"
 git_tidy = "python_tools.git_tidy:main"
 jmespath = "python_tools.jmespath:main"
 json2ini = "python_tools.json2ini:main"
 json2yaml = "python_tools.json2yaml:main"
 jsornate = "python_tools.jsornate:main"
+mail2login = "python_tools.mail2login:main"
 offset2rowcol = "python_tools.offset2rowcol:main"
 pydict2json = "python_tools.pydict2json:main"
+yaml2json = "python_tools.yaml2json:main"
 yaml2yaml = "python_tools.yaml2yaml:main"
 
 [tool.poetry.dev-dependencies]
