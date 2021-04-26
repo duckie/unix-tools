@@ -1,0 +1,85 @@
+#!/bin/bash 
+
+usage() {
+cat <<EOF
+ssh-all [-s|--session-name] [-t|--tmux]|[-c, --check]|COMMAND ARG1 ... ARGN
+Run a command, a check or a tmux on all hosts of a file
+
+-h, --hosts           File containing ssh spec to ssh-all to
+-t, --tmux            Open a tmux session with a window sshed on all hosts
+-c, --check           Run a ssh connectivity check.
+-s, --session-name    Name of the tmux session if used
+EOF
+  exit 1
+}
+
+# Parse args
+session_name="ssh-all"
+check=0
+tmux=0
+clean=0
+hosts=/dev/null
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--hosts)
+      hosts="$2"
+      shift
+      ;;
+    -s|--session-name)
+      session_name="$2"
+      shift
+      ;;
+    -c|--check)
+      check=1
+      ;;
+    --clean)
+      clean=1
+      ;;
+    -t|--tmux)
+      tmux=1
+      ;;
+    --help)
+      usage
+      exit 0
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
+done
+
+if [[ 1 == "$tmux" ]]; then
+  while read hostname; do
+    if [[ ${hostname:0:1} != "#" ]] ; then
+      session_name="$(ssh -G $hostname 2>/dev/null|grep '^hostname'|awk '{print $2}'|tr -s '.' '-')" 
+      if [[ "$clean" == 0 ]]; then
+        tmux new-session -s "$session_name" -d "ssh $hostname"
+      else
+        tmux kill-session -t "$session_name"
+      fi
+    fi
+  done<"$hosts"
+elif [[ 1 == "$check" ]]; then
+  process_ids=()
+  while read hostname; do
+    if [[ ${hostname:0:1} != "#" ]] ; then
+      session_name="$(ssh -G $hostname 2>/dev/null|grep '^hostname')"
+      (
+        ssh -q "$hostname" echo </dev/null >/dev/null 2>&1
+        if [[ "$?" == 0 ]]; then
+          echo "OK $session_name"
+        else
+          echo "KO $session_name"
+        fi
+      )&
+      process_ids+=($!)
+    fi
+  done<"$hosts"
+  wait "${process_ids[@]}"
+else
+  echo "$@"
+fi
+
+
