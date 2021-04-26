@@ -70,7 +70,7 @@ sshuttle2() {
   # Extract hostname bash only, keep it here as a snippet
   #IFS="@" read -ra sshwords <<<"$1"
   #hostname="${sshwords[@]:(-1)}"
-  if [[ "$unix_tools_os" == "Linux" ]]; then
+  if [[ "$(uname)" == "Linux" ]]; then
     sshuttle --method nft -r "$1" $(ssh -G "$1" | awk '$1 == "hostname" { print $2 }')
   else
     sshuttle -r "$1" $(ssh -G "$1" | awk '$1 == "hostname" { print $2 }')
