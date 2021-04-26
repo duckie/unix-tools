@@ -78,3 +78,10 @@ curl -O http://centos.mirrors.proxad.net/8.2.2004/isos/x86_64/CentOS-8.2.2004-x8
 qemu-system-x86_64 -netdev type=user,id=mynet0 -device virtio-net-pci,netdev=mynet0 -m 2048 -localtime -enable-kvm -drive index=0,media=disk,if=virtio,file=/dev/sda -vga qxl -vnc :0 -daemonize -cdrom /tmp/CentOS-8.2.2004-x86_64-boot.iso -boot d
 
 gsettings set org.gnome.desktop.sound event-sounds false
+
+az vm create --image OpenLogic:CentOS-LVM:8-lvm-gen2:latest -g jbjansen-dcim-test --vnet-name fm-vnet --subnet fm-subnet --ssh-key-values @/home/canard/.ssh/id_rsa.pub --nsg fm-all-in-vnet --name jbjansen-fm-vm3 --admin-username centos --size Standard_DS2_v2
+
+aws --profile=dataiku-dev cloudformation create-stack --stack-name jbjansen-fm1 --template-body file://./fm/cloud-formation/aws/standalone-instanceonly/fleet-manager-instance.yml --parameters file://./fm/tools/aws-cfg-instance-jbjansen.json --region eu-west-1 --capabilities CAPABILITY_NAMED_IAM
+
+set ts=2 sw=2 sta et
+
