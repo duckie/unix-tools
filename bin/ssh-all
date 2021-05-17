@@ -79,7 +79,19 @@ elif [[ 1 == "$check" ]]; then
   done<"$hosts"
   wait "${process_ids[@]}"
 else
-  echo "$@"
+  process_ids=()
+  while read hostname; do
+    if [[ ${hostname:0:1} != "#" ]] ; then
+      session_name="$(ssh -G $hostname 2>/dev/null|grep '^hostname')"
+      (
+        exec > >(trap "" INT TERM; sed "s/^/$hostname (stdout): /")
+        exec 2> >(trap "" INT TERM; sed "s/^/$hostname (stderr): /" >&2)
+        ssh -q "$hostname" "$@" 
+        echo "exited with $?"
+      )&
+      process_ids+=($!)
+    fi
+  done<"$hosts"
+  wait "${process_ids[@]}"
 fi
-
 
