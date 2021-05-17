@@ -1,5 +1,7 @@
 nohup play_until_success ./run_all.sh <&- &>/dev/null &
 CURRENT_DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )"
+canonical=$(cd -P -- "$(dirname -- "$0")" && printf '%s\n' "$(pwd -P)/$(basename -- "$0")")
+canonical=$(exec 2>/dev/null;cd -- $(dirname "$0"); unset PWD; /usr/bin/pwd || /bin/pwd || pwd)
 docker run --rm -it --privileged --pid=host walkerlee/nsenter -t 1 -m -u -i -n sh
 ps xf
 tcpdump -w /tmp/dump.pcap -i lo port 40248 or port 45426
