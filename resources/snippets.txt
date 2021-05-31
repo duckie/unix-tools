@@ -73,6 +73,7 @@ LANG=C.utf8 find /usr/lib/python3.6/site-packages/ -exec rpm -qf {} \; | grep "i
 
 # Self signed cert
 openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
+openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt -subj "/C=FR/ST=Ile-De-France/L=Paris/O=Dataiku/CN=dataiku.com"
  
 # Qemu run ISO from remote shell
 apt-get install qemu-kvm
