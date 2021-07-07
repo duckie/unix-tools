@@ -6,15 +6,13 @@ ssh-all [-s|--session-name] [-t|--tmux]|[-c, --check]|COMMAND ARG1 ... ARGN
 Run a command, a check or a tmux on all hosts of a file
 
 -h, --hosts           File containing ssh spec to ssh-all to
--t, --tmux            Open a tmux session with a window sshed on all hosts
+-t, --tmux            Open a tmux session per host sshed on all hosts
 -c, --check           Run a ssh connectivity check.
--s, --session-name    Name of the tmux session if used
 EOF
   exit 1
 }
 
 # Parse args
-session_name="ssh-all"
 check=0
 tmux=0
 clean=0
@@ -24,10 +22,6 @@ while [ $# -gt 0 ]; do
   case "$1" in
     -h|--hosts)
       hosts="$2"
-      shift
-      ;;
-    -s|--session-name)
-      session_name="$2"
       shift
       ;;
     -c|--check)
