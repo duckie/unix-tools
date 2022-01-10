@@ -5,10 +5,16 @@ autocmd!
 
 " Initilialize Vundle
 set rtp+=~/.tools/external/vim/vim-plug
-call plug#begin('~/.vim/plugged')
-Plug 'tpope/vim-surround'
-Plug 'ycm-core/YouCompleteMe'
-call plug#end()
+if has('nvim')
+  call plug#begin('~/.vim/plugged')
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  call plug#end()
+else
+  call plug#begin('~/.vim/plugged')
+  Plug 'tpope/vim-surround'
+  Plug 'ycm-core/YouCompleteMe'
+  call plug#end()
+endif
 
 filetype plugin indent on
 filetype on
@@ -118,6 +124,7 @@ autocmd FileType go               let b:comment_leader = '//'
 autocmd FileType java,scala       let b:comment_leader = '//'
 autocmd FileType javascript,json  let b:comment_leader = '//'
 autocmd FileType php              let b:comment_leader = '//'
+autocmd FileType terraform,hcl    let b:comment_leader = '//'
 autocmd FileType sh,ruby,python   let b:comment_leader = '#'
 autocmd FileType conf,fstab       let b:comment_leader = '#'
 autocmd FileType tex              let b:comment_leader = '%'
@@ -258,3 +265,8 @@ let g:rst_prefer_python_version = 'python3'
 " Shortcuts to plugins
 noremap <C-G> :YcmCompleter GoTo<cr>
 map <C-I> :pyf /usr/share/clang/clang-format.py<cr>
+
+" neovim tricks for old fucks like me
+if has('nvim')
+  nnoremap Y Y
+endif
