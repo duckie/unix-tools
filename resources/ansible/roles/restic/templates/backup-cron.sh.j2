@@ -1,0 +1,18 @@
+#! /bin/sh +e
+export MACHINE_NAME="{{inventory_hostname}}"
+
+log_file="/var/lib/restic/log/backup-$(date '+%Y-%m-%d-%Hh%Mm%Ss').log"
+(/var/lib/restic/backup.sh 2>&1) > $log_file
+if [ $? = 0 ]
+then
+	set -e
+  {% if restic_mail_receiver is defined %}
+	cat "$log_file"|mail -s "[SUCCESS] $MACHINE_NAME restic backup" {{restic_mail_receiver}}
+  {% endif %}
+else
+	set -e
+  {% if restic_mail_receiver is defined %}
+	cat "$log_file"|mail -s "[FAILURE] $MACHINE_NAME restic backup FAILED" {{restic_mail_receiver}}
+  {% endif %}
+fi
+

@@ -1,0 +1,38 @@
+---
+restic_version: 0.12.0
+
+restic_archives:
+  0.12.0:
+    url: https://github.com/restic/restic/releases/download/v0.12.0/restic_0.12.0_linux_amd64.bz2
+    sha256: 63d13d53834ea8aa4d461f0bfe32a89c70ec47e239b91f029ed10bd88b8f4b80
+    file: restic_0.12.0_linux_amd64.bz2
+
+restic_repositories: []
+restic_cache_dir: /data-backup-cache/restic
+
+# Example
+#- name: grafana
+#  dest: s3:s3.amazonaws.com/bucket-name/grafana
+#  src: /data-snapshot/home/grafana
+#  files_from: # files_from and src should be exclusive
+#  - /data-snapshot/home/grafana
+#  exclude:
+#  - "/data-snapshot/home/grafana/cache/**/"
+#  pre_action: |
+#    #!/bin/bash -e
+#    echo "You go backup !"
+#  post_action: |
+#    #!/bin/bash -e
+#    echo "Clean up your stuff honey"
+#  lvm_snapshots:
+#  - vg: vg-data
+#    lv: lv-data
+#    snapshot: lv-data-snap
+#    mount_point: /data-snapshot
+#  prune:
+#    keep_within: 1m
+#    keep_daily: 30
+#    keep_weekly: 15
+#    keep_monthly: 12
+#    keep_yearly: 10
+

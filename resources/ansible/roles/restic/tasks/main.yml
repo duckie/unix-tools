@@ -1,0 +1,167 @@
+---
+- name: "restic: check input"
+  assert:
+    that: [item.src is defined or item.files_from is defined]
+    fail_msg: "The backup {{item.name}} is missing both 'src' and 'files_from' attributes."
+  loop: "{{restic_repositories}}"
+  loop_control:
+    label: "{{item.name}}"
+
+- name: "restic: Create service user"
+  become: true
+  user:
+    name: restic
+    home: /var/lib/restic
+
+#- name: "restic: sudo rules"
+  #become: true
+  #copy:
+    #dest: "/etc/sudoers.d/restic"
+    #content: |
+      #restic ALL=(ALL) NOPASSWD: ALL
+
+- name: "restic: Ensure cache dir"
+  become: true
+  file:
+    path: "{{restic_cache_dir}}"
+    state: directory
+    owner: restic
+    mode: 0700
+
+- name: "restic: download"
+  become: true
+  become_user: restic
+  get_url:
+    url: "{{restic_archives[restic_version].url}}"
+    dest: "/tmp/{{restic_archives[restic_version].file}}"
+    checksum: "sha256:{{restic_archives[restic_version].sha256}}"
+
+- name: "restic: bin dir"
+  become: true
+  become_user: restic
+  file:
+    path: "/var/lib/restic/bin"
+    state: directory
+
+- name: "restic: log dir"
+  become: true
+  become_user: restic
+  file:
+    path: "/var/lib/restic/log"
+    state: directory
+
+- name: "restic: unarchive"
+  become: true
+  become_user: restic
+  shell:
+    cmd: "bzcat /tmp/{{restic_archives[restic_version].file}} > /var/lib/restic/bin/restic"
+    creates: /var/lib/restic/bin/restic
+
+- name: "restic: mode 0700"
+  become: true
+  become_user: restic
+  file:
+    path: "/var/lib/restic/bin/restic"
+    mode: 0700
+
+- name: "restic: setcap"
+  become: true
+  capabilities:
+    path: "/var/lib/restic/bin/restic"
+    capability: cap_dac_read_search+ep
+    state: present
+
+- name: "restic: bin dir"
+  become: true
+  become_user: restic
+  file:
+    path: "/var/lib/restic/.aws"
+    state: directory
+    mode: 0700
+
+- name: "restic: restic creds"
+  become: true
+  become_user: restic
+  copy:
+    content: "{{restic_password}}"
+    dest: "/var/lib/restic/.restic_password"
+    mode: 0600
+  when: restic_password is defined
+
+- name: "restic: init repos"
+  become: true
+  become_user: restic
+  shell:
+    cmd: "/var/lib/restic/bin/restic -r {{item.dest}} init --password-file /var/lib/restic/.restic_password && touch /var/lib/restic/.restic_repo_{{item.name}}_flag"
+    creates: "/var/lib/restic/.restic_repo_{{item.name}}_flag"
+  loop: "{{restic_repositories}}"
+  loop_control:
+    label: "{{item.name}}"
+
+- name: "restic: deploy pre actions"
+  become: true
+  become_user: restic
+  copy:
+    content: "{{item.pre_action}}"
+    dest: "/var/lib/restic/bin/{{item.name}}_pre_action.sh"
+    mode: 0700
+  loop: "{{restic_repositories | selectattr('pre_action','defined')}}"
+  loop_control:
+    label: "{{item.name}}"
+
+- name: "restic: deploy post actions"
+  become: true
+  become_user: restic
+  copy:
+    content: "{{item.pre_action}}"
+    dest: "/var/lib/restic/bin/{{item.name}}_post_action.sh"
+    mode: 0700
+  loop: "{{restic_repositories | selectattr('post_action','defined')}}"
+  loop_control:
+    label: "{{item.name}}"
+
+- name: "restic: write files_from"
+  become: true
+  become_user: restic
+  copy:
+    content: "{{item.files_from | join('\n') }}"
+    dest: "/var/lib/restic/{{item.name}}_includes.txt"
+    mode: 0600
+  loop: "{{restic_repositories | selectattr('files_from','defined')}}"
+  loop_control:
+    label: "{{item.name}}"
+
+- name: "restic: write excludes"
+  become: true
+  become_user: restic
+  copy:
+    content: "{{item.exclude | join('\n') }}"
+    dest: "/var/lib/restic/{{item.name}}_excludes.txt"
+    mode: 0600
+  loop: "{{restic_repositories | selectattr('exclude','defined')}}"
+  loop_control:
+    label: "{{item.name}}"
+  
+- name: "restic: backup script"
+  become: true
+  become_user: restic
+  template:
+    src: backup.sh.j2
+    dest: /var/lib/restic/backup.sh
+    mode: 0700
+
+- name: "restic: backup cron script"
+  become: true
+  become_user: restic
+  template:
+    src: backup-cron.sh.j2
+    dest: /var/lib/restic/backup-cron.sh
+    mode: 0700
+
+#- name: "restic: install crontab"
+  #become: true
+  #become_user: restic
+  #cron:
+    #name: "restic backup"
+    #special_time: "daily"
+    #job: "/var/lib/restic/backup-cron.sh"

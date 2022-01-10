@@ -1,0 +1,68 @@
+#!/bin/bash -e
+
+# Env
+export AWS_SHARED_CREDENTIALS_FILE=/var/lib/restic/.aws/credentials
+export RESTIC_PASSWORD_FILE=/var/lib/restic/.restic_password
+export RESTIC_CACHE_DIR={{restic_cache_dir}}
+export GOMAXPROCS=2
+
+# Backup. We resnapshot for each, as per the analytics use case
+{% for item in restic_repositories %}
+# Run backup {{item.name}}
+echo "[+] Start backup {{item.name}}"
+
+{% if item.trim_filesystems is defined %}
+{% for fs in item.trim_filesystems %}
+/bin/sudo /sbin/fstrim {{fs}}
+{% endfor %}
+{% endif %}
+{% if item.lvm_snapshots is defined %}
+{% for lvm_volume in item.lvm_snapshots %}
+/bin/sudo /sbin/lvcreate --snapshot --setactivationskip n -l 100%FREE --name {{lvm_volume.snapshot}} {{lvm_volume.vg}}/{{lvm_volume.lv}}
+/bin/sudo /bin/mount -r -o nouuid /dev/{{lvm_volume.vg}}/{{lvm_volume.snapshot}} {{lvm_volume.mount_point}}
+{% endfor %}
+
+function cleanup_snapshots_{{item.name}}()
+{
+: # Shell no-op not to break on empty loop
+{% for lvm_volume in item.lvm_snapshots %}
+  /bin/sudo /bin/umount {{lvm_volume.mount_point}} || true
+  /bin/sudo /sbin/lvremove -f {{lvm_volume.vg}}/{{lvm_volume.snapshot}}
+{% endfor %}
+}
+
+trap cleanup_snapshots_{{item.name}} SIGTERM EXIT
+{% endif %}
+{% if item.pre_action is defined %}
+sudo "/var/lib/restic/bin/{{item.name}}_pre_action.sh"
+{% endif %}
+{% if (item.src is defined or item.files_from is defined) and item.dest is defined %}
+/var/lib/restic/bin/restic -v -r {{item.dest}} backup {% if item.files_from is defined %}--files-from "/var/lib/restic/{{item.name}}_includes.txt"{% endif %} {% if item.exclude is defined %}--exclude-file "/var/lib/restic/{{item.name}}_excludes.txt"{% endif %} {% if item.src is defined %}"{{item.src}}"{% endif %}
+
+{% endif %}
+{% if item.post_action is defined %}
+sudo "/var/lib/restic/bin/{{item.name}}_post_action.sh"
+
+{% endif %}
+{% if item.lvm_snapshots is defined %}
+cleanup_snapshots_{{item.name}}
+
+{% endif %} 
+echo "[+] Backup {{item.name}} done"
+
+{% endfor %}
+
+# If all cleanups went well, remove the trap
+trap - SIGTERM EXIT
+
+# Purge and check
+{% for item in restic_repositories %}
+{% if item.dest is defined %}
+{% if item.prune is defined %}
+echo "[+] Start purge of backup {{item.name}}"
+/var/lib/restic/bin/restic -v -r {{item.dest}} forget --prune {{ ' --keep-within'+item.keep_within if item.keep_within is defined else '' }}{{ ' --keep-daily'+item.keep_daily if item.keep_daily is defined else '' }}{{ ' --keep-weekly'+item.keep_weekly if item.keep_weekly is defined else '' }}{{ ' --keep-monthly'+item.keep_monthly if item.keep_monthly is defined else '' }}{{ ' --keep-yearly'+item.keep_yearly if item.keep_yearly is defined else '' }}
+/var/lib/restic/bin/restic -v -r {{item.dest}} check
+echo "[+] Purge of backup {{item.name}} done"
+{% endif %}
+{% endif %}
+{% endfor %}
