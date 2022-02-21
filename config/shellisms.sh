@@ -84,6 +84,9 @@ list_all_from_cidr() {
 
 # Default editor
 export EDITOR=vim
+if command -v nvim >/dev/null; then
+  export EDITOR=nvim
+fi
 
 # custom helpers
 TOOLS_BIN_PATH=$(dirname "${UNIX_TOOLS_CONFIG_PATH}")/bin
