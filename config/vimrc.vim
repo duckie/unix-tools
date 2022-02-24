@@ -4,17 +4,13 @@ filetype off
 autocmd!
 
 " Initilialize Vundle
-set rtp+=~/.tools/external/vim/vim-plug
-if has('nvim')
-  call plug#begin('~/.vim/plugged')
-  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-  call plug#end()
-else
-  call plug#begin('~/.vim/plugged')
-  Plug 'tpope/vim-surround'
-  Plug 'ycm-core/YouCompleteMe'
-  call plug#end()
-endif
+"if has('nvim')
+"set rtp+=~/.tools/external/vim/vim-plug
+"call plug#begin('~/.vim/plugged')
+"Plug 'tpope/vim-surround'
+"Plug 'ycm-core/YouCompleteMe'
+"call plug#end()
+"endif
 
 filetype plugin indent on
 filetype on
