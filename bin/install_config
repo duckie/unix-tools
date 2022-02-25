@@ -63,6 +63,9 @@ if [ ! -d "${BINPATH}/.pyenv" ]; then
   deactivate
 fi
 
+# Install vimplug
+curl -fLo ~/config/.nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
 # Install antigen
 #mkdir -p "$HOME/bin"
 #if [ ! -f "${HOME}/bin/antigen.zsh" ]; then
