@@ -20,9 +20,11 @@ insert_once() {
   fi
 }
 
+mkdir -p ${HOME}/.config/nvim
 insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
 insert_once "source ${CONFPATH}/zshrc" ${HOME}/.zshrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
+insert_once "source ${CONFPATH}/nvimrc.vim" ${HOME}/.config/nvim/init.vim
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 insert_once "source ${CONFPATH}/gdbinit" ${HOME}/.gdbinit
 insert_once "set editing-mode vi" ${HOME}/.inputrc
@@ -62,10 +64,10 @@ if [ ! -d "${BINPATH}/.pyenv" ]; then
 fi
 
 # Install antigen
-mkdir -p "$HOME/bin"
-if [ ! -f "${HOME}/bin/antigen.zsh" ]; then
-  curl -L git.io/antigen > "${HOME}/bin/antigen.zsh"
-fi
+#mkdir -p "$HOME/bin"
+#if [ ! -f "${HOME}/bin/antigen.zsh" ]; then
+#  curl -L git.io/antigen > "${HOME}/bin/antigen.zsh"
+#fi
 
 # Install WM confs
 echo "Link gtk"

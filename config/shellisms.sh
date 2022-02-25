@@ -85,6 +85,8 @@ list_all_from_cidr() {
 # Default editor
 export EDITOR=vim
 if command -v nvim >/dev/null; then
+  alias vim=nvim
+  alias vimdiff='nvim -d'
   export EDITOR=nvim
 fi
 
