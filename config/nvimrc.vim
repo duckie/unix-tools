@@ -24,6 +24,10 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+vim.g.markdown_fenced_languages = {
+  "ts=typescript"
+}
+
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -118,6 +122,14 @@ cmp.setup.cmdline(':', {
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 require('lspconfig')['jedi_language_server'].setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  flags = {
+    -- This will be the default in neovim 0.7+
+    debounce_text_changes = 150,
+  }
+}
+require('lspconfig')['gopls'].setup {
   capabilities = capabilities,
   on_attach = on_attach,
   flags = {
