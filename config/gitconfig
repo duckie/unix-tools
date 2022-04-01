@@ -9,9 +9,9 @@
 [diff]
     mnemonicPrefix = true # Improve "git diff" output of source/target
     renames        = true # and detect renames
-    tool = vimdiff
+    tool = nvimdiff
 [merge]
-    tool = vimdiff
+    tool = nvimdiff
 [log]
     abbrevCommit   = true # Make "git log" show abbreviated SHA1
 [rerere]
@@ -25,4 +25,4 @@
     #track_all_remote_branches = ! git branch -a | grep \"^\\s*remotes/[^>]*$\"  | xargs --interactive -L1 git checkout --track
     diff1 = diff --ignore-space-at-eol --ignore-space-change --ignore-all-space --ignore-blank-lines
 [core]
-    editor = vim
+    editor = nvim
