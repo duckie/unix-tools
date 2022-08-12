@@ -10,6 +10,7 @@
     mnemonicPrefix = true # Improve "git diff" output of source/target
     renames        = true # and detect renames
     tool = nvimdiff
+    external = difft
 [merge]
     tool = nvimdiff
 [log]
