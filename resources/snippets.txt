@@ -88,3 +88,9 @@ aws --profile=dataiku-dev cloudformation create-stack --stack-name jbjansen-fm1 
 
 set ts=2 sw=2 sta et
 
+export LDFLAGS="-L$(brew --prefix openssl)/lib"
+export CFLAGS="-I$(brew --prefix openssl)/include"
+CFLAGS="-arch -arm64" CXXFLAGS="-arch arm64" arch -arm64 nvim
+
+> sudo rm -rf /Library/Developer/CommandLineTools
+> sudo xcode-select -s /Applications/Xcode.app
