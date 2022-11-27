@@ -21,12 +21,14 @@ insert_once() {
 }
 
 mkdir -p ${HOME}/.config/nvim
+mkdir -p ${HOME}/.config/kitty
 insert_once "source ${CONFPATH}/bashrc" ${HOME}/.bashrc
 insert_once "source ${CONFPATH}/zshrc" ${HOME}/.zshrc
 insert_once "source ${CONFPATH}/vimrc.vim" ${HOME}/.vimrc
 insert_once "source ${CONFPATH}/nvimrc.vim" ${HOME}/.config/nvim/init.vim
 insert_once "source-file ${CONFPATH}/tmux.conf" ${HOME}/.tmux.conf
 insert_once "source ${CONFPATH}/gdbinit" ${HOME}/.gdbinit
+insert_once "include ${CONFPATH}/kitty.conf" ${HOME}/.config/kitty/kitty.conf
 insert_once "set editing-mode vi" ${HOME}/.inputrc
 git config --global include.path .tools/config/gitconfig
 
