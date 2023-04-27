@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
 : "${TOOLS_VENVS_PATH:=$HOME/venvs}"
+
 VENV=$1
+if [ "$VENV" = "" ]; then
+  VENV=$(basename $(pwd))
+fi
+
 if [ -f "$TOOLS_VENVS_PATH/$VENV/bin/activate" ]; then
   source "$TOOLS_VENVS_PATH/$VENV/bin/activate"
+else
+  echo "Could not find vitual env $TOOLS_VENVS_PATH/$VENV"
 fi
