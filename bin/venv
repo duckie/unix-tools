@@ -4,7 +4,11 @@
 
 VENV=$1
 if [ "$VENV" = "" ]; then
-  VENV=$(basename $(pwd))
+  if [ $(git rev-parse --is-inside-work-tree) = "true" ]; then
+    VENV=$(basename $(git rev-parse --show-toplevel))
+  else
+    VENV=$(basename $(pwd))
+  fi
 fi
 
 if [ -f "$TOOLS_VENVS_PATH/$VENV/bin/activate" ]; then
