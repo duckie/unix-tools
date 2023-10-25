@@ -1,0 +1,18 @@
+gcloud iam workload-identity-pools providers create-aws dataiku-aws-training \
+--location="global"  \
+--workload-identity-pool="dataiku-aws" \
+--attribute-mapping="google.subject=assertion.arn,attribute.account=assertion.account,attribute.aws_role=assertion.arn.extract('assumed-role/{role}/'),attribute.aws_ec2_instance=assertion.arn.extract('assumed-role/{role_and_session}').extract('/{session}')" \
+--account-id=160681276253 \
+--display-name "Dataiku Training"
+
+gcloud iam service-accounts add-iam-policy-binding ds-platform-studios@dku-svc-workloads.iam.gserviceaccount.com \
+--role=roles/iam.workloadIdentityUser \
+--member="principalSet://iam.googleapis.com/projects/891055376701/locations/global/workloadIdentityPools/dataiku-aws/attribute.account/401293328855/attribute.aws_role/ds-platform-dss"
+
+gcloud iam workload-identity-pools create-cred-config \
+projects/891055376701/locations/global/workloadIdentityPools/dataiku-aws/providers/dataiku-aws-ds \
+--service-account=ds-platform-studios@dku-svc-workloads.iam.gserviceaccount.com \
+--aws \
+--output-file=dataiku-aws-ds-gcloud-federation.json
+
+/root/google-cloud-sdk/bin/gcloud --project dku-vault secrets versions access latest --secret=dataiku-ldap-client-tls-key

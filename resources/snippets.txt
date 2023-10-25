@@ -94,3 +94,7 @@ CFLAGS="-arch -arm64" CXXFLAGS="-arch arm64" arch -arm64 nvim
 
 > sudo rm -rf /Library/Developer/CommandLineTools
 > sudo xcode-select -s /Applications/Xcode.app
+
+aws ssm get-parameter --region eu-west-1 --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 
+
+createuser dummyuser -e --pwprompt
