@@ -98,3 +98,12 @@ CFLAGS="-arch -arm64" CXXFLAGS="-arch arm64" arch -arm64 nvim
 aws ssm get-parameter --region eu-west-1 --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 
 
 createuser dummyuser -e --pwprompt
+ 
+
+convert general_kenobi.gif -coalesce -repage 0x0 -crop 225x225+170+0 +repage general_kenobi_cropped.gif
+
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/darwin/arm64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+
+/usr/local/openssl-3.0.7/bin/openssl req -nodes -new -x509 -keyout certbot-sp.key -out certbot-sp.crt -subj "/CN=CLI-Login"
