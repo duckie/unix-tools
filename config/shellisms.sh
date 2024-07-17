@@ -91,7 +91,7 @@ if command -v nvim >/dev/null; then
 fi
 
 # custom helpers
-TOOLS_BIN_PATH=$(dirname "${UNIX_TOOLS_CONFIG_PATH}")/bin
+TOOLS_BIN_PATH=$(dirname "${UNIX_TOOLS_CONFIG_PATH}")/bin:$(dirname "${UNIX_TOOLS_CONFIG_PATH}")/bin/.pyenv/bin
 pathprepend ${TOOLS_BIN_PATH}
 
 # Use home binary dir

@@ -2,8 +2,8 @@
 UNIX_TOOLS_CONFIG_PATH="$( cd "$(dirname "${(%):-%x}")" ; pwd -P )"
 
 # Load antigen
-source "$HOME/bin/antigen.zsh"
-antigen apply
+# source "$HOME/bin/antigen.zsh"
+# antigen apply
 
 # History management
 HISTFILE=~/.histfile

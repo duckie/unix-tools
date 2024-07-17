@@ -53,16 +53,11 @@ mkdir -p ${HOME}/projects/go
 
 # Install pyenv
 if [ ! -d "${BINPATH}/.pyenv" ]; then
-  # Package
-  cd "${ROOTPATH}/envs/python-tools"
-  poetry build -f sdist
-  cd -
-
   # Install
   python3 -m venv "${BINPATH}/.pyenv"
   source "${BINPATH}/.pyenv/bin/activate"
   pip install pip --upgrade
-  pip install "${ROOTPATH}/envs/python-tools/dist/python-tools-0.1.0.tar.gz"
+  pip install -e "${ROOTPATH}/envs/python-tools"
   deactivate
 fi
 

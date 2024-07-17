@@ -1,15 +1,27 @@
-[tool.poetry]
-name = "python-tools"
-version = "0.1.0"
-description = ""
-authors = ["Jean-Bernard Jansen <jean-bernard.jansen@dataiku.com>"]
+[project]
+name = "python_tools"
+version = "0.0.1"
+dynamic = ["dependencies"]
+description = "Personal set of tools written in python" 
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Programming Language :: Python :: 3.9",
+]
+authors = [
+  {name = "Jean-Bernard Jansen", email = "jeanbernard@jjansen.fr"}
+]
+maintainers = [
+  {name = "Jean-Bernard Jansen", email = "jeanbernard@jjansen.fr"}
+]
 
-[tool.poetry.dependencies]
-python = "^3.6"
-fonttools = "^4.17.1"
-PyYAML = "^5.3.1"
+[project.urls]
+Homepage = "https://github.com/duckie/unix-tools"
+Documentation = "https://github.com/duckie/unix-tools"
 
-[tool.poetry.scripts]
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[project.scripts]
 ansibleinventory2sshconfig = "python_tools.ansibleinventory2sshconfig:main"
 boost2camel = "python_tools.boost2camel:main"
 camel2boost = "python_tools.camel2boost:main"
@@ -26,8 +38,16 @@ pydict2json = "python_tools.pydict2json:main"
 yaml2json = "python_tools.yaml2json:main"
 yaml2yaml = "python_tools.yaml2yaml:main"
 
-[tool.poetry.dev-dependencies]
+[tool.setuptools.packages.find]
+exclude = ["test"]
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.black]
+line-length = 120
+
+[tool.isort]
+atomic = true
+force_grid_wrap = 0
+include_trailing_comma = true
+line_length = 120
+multi_line_output = 3
+use_parentheses = true
