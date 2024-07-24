@@ -133,6 +133,7 @@ require('lspconfig')['jedi_language_server'].setup {
   }
 }
 require('lspconfig')['gopls'].setup {
+  cmd = {'gopls','--remote=auto'},
   capabilities = capabilities,
   on_attach = on_attach,
   flags = {
