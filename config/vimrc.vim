@@ -116,7 +116,6 @@ endfunction
 
 " Comment/Uncomment
 autocmd FileType c,cpp            let b:comment_leader = '//'
-autocmd FileType go               let b:comment_leader = '//'
 autocmd FileType java,scala       let b:comment_leader = '//'
 autocmd FileType javascript,json  let b:comment_leader = '//'
 autocmd FileType php              let b:comment_leader = '//'
@@ -127,6 +126,15 @@ autocmd FileType tex              let b:comment_leader = '%'
 autocmd FileType mail             let b:comment_leader = '> '
 autocmd FileType vim              let b:comment_leader = '" '
 autocmd FileType lua              let b:comment_leader = '-- '
+autocmd FileType go               call s:setup_go()
+function! s:setup_go()
+  let b:comment_leader = '//'
+  set tabstop=4
+  set shiftwidth=4
+  set softtabstop=4
+  set smarttab
+  set expandtab!
+endfunction
 
 noremap <silent> ,c :s/^\(\s*\)/\=submatch(1).GetVar("comment_leader","#")/g <bar> :nohl<cr>
 noremap <silent> ,x :s,^\(\s*\)<c-r>=GetVar("comment_leader","#")<cr>,\1,g <bar> :nohl <cr>
